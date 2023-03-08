@@ -1,0 +1,29 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "standard-with-typescript",
+        "plugin:jsdoc/recommended-error"
+    ],
+    "overrides": [],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "project": ["tsconfig.json"]
+    },
+    "plugins": ["jsdoc"],
+    "rules": {
+        "semi": ["error", "always"],
+        "quotes": ["error", "single"],
+        "max-len": "off",
+        "no-console": "error",
+        "indent": ["error", 2],
+        "@typescript-eslint/semi": 0,
+        "@typescript-eslint/space-before-function-paren": 0,
+        "@typescript-eslint/return-await": 0,
+        "@typescript-eslint/no-explicit-any": "error",
+        "jsdoc/newline-after-description": 0
+    }
+}
