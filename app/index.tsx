@@ -1,11 +1,10 @@
-import { View } from 'react-native';
-import { Stack } from 'expo-router';
+import { Text, View } from 'react-native';
 import { type ReactElement } from 'react';
 
 const Home = (): ReactElement => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Stack.Screen options={{ title: 'Homepage' }} />
+      <Text>Hello there</Text>
     </View>
   );
 };
