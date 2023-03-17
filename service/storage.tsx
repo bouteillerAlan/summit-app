@@ -1,6 +1,21 @@
 import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 
+/**
+ * Give you the abilities to store, read and delete data in the storage
+ * automatically chose between `AsyncStorage` (if you are in web) and `SecureStorage` (for IOS and Android)
+ */
 export default class StorageService {
+  /**
+   * check if the code is executed on a web browser
+   * @returns {boolean} true if the code is executed on a web browser
+   * @private
+   */
+  private isWeb(): boolean {
+    return Platform.OS === 'web';
+  }
+
   /**
    * save a value at a given key in the secure storage
    * @param {string} key the key you want to have for accessing the value later
@@ -8,7 +23,9 @@ export default class StorageService {
    * @returns {Promise<void>}
    */
   public async save(key: string, value: string): Promise<void> {
-    await SecureStore.setItemAsync(key, value);
+    this.isWeb()
+      ? await AsyncStorage.setItem(key, value)
+      : await SecureStore.setItemAsync(key, value);
   }
 
   /**
@@ -17,7 +34,9 @@ export default class StorageService {
    * @returns {Promise<string | undefined>} the value or undefined
    */
   public async get(key: string): Promise<string | undefined> {
-    const result = await SecureStore.getItemAsync(key);
+    const result = this.isWeb()
+      ? await AsyncStorage.getItem(key)
+      : await SecureStore.getItemAsync(key);
     return result === null ? undefined : result;
   }
 
@@ -27,6 +46,8 @@ export default class StorageService {
    * @returns {Promise<void>}
    */
   public async remove(key: string): Promise<void> {
-    await SecureStore.deleteItemAsync(key);
+    this.isWeb()
+      ? await AsyncStorage.removeItem(key)
+      : await SecureStore.deleteItemAsync(key);
   }
 }
