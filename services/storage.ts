@@ -6,7 +6,18 @@ import { Platform } from 'react-native';
  * Give you the abilities to store, read and delete data in the storage
  * automatically chose between `AsyncStorage` (if you are in web) and `SecureStorage` (for IOS and Android)
  */
-export default class StorageService {
+export default class Storage {
+  private static instance: Storage;
+
+  /**
+   * singleton handler
+   * @returns {Storage} the single instance of `Storage`
+   */
+  public static getInstance(): Storage {
+    if (typeof Storage.instance === 'undefined') Storage.instance = new Storage();
+    return Storage.instance;
+  }
+
   /**
    * check if the code is executed on a web browser
    * @returns {boolean} true if the code is executed on a web browser
