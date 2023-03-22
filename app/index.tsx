@@ -1,12 +1,129 @@
-import { Text, View } from 'react-native';
-import { type ReactElement } from 'react';
+import { type ReactElement, useState } from 'react';
+import { Center, FormControl, Icon, Input, Pressable, VStack, WarningOutlineIcon } from 'native-base';
+import { FontAwesome5 } from '@expo/vector-icons';
+import Api from '../services/api';
+import { SubmitButton } from '../components/button';
+import { type AxiosResponse } from 'axios';
 
-const Home = (): ReactElement => {
+interface FormError {
+  formError: string
+}
+
+interface InputState {
+  value: string
+  onError?: boolean
+  errorMessage?: string
+}
+
+interface LoginForm extends FormError {
+  email: InputState
+  password: InputState
+}
+
+enum FormDataValidation {
+  'notEmpty' = 'notEmpty',
+  'isEmail' = 'isEmail'
+}
+
+const Login = (): ReactElement => {
+  const [show, setShow] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [formData, setFormData] = useState<LoginForm>(
+    { password: { value: '' }, email: { value: '' }, formError: '' }
+  );
+
+  /**
+   * handle the data assignation and the data check for the form
+   * @param {Exclude<keyof LoginForm, "formError">} index index for the value assignment
+   * @param {string} value the value you want to assign to the index
+   * @param {FormDataValidation[]} validation the test you want to apply for the current value
+   * todo - setup a service for that or something like that
+   */
+  function handleFormData(index: Exclude<keyof LoginForm, 'formError'>, value: string, validation?: FormDataValidation[] | undefined): void {
+    const currentFormData = formData;
+    currentFormData[index].value = value;
+
+    // todo - move the test on another function
+    if (validation !== undefined) {
+      // regex compliant with RFC 5322 - https://stackoverflow.com/questions/201323/how-can-i-validate-an-email-address-using-a-regular-expression
+      const emailFormat = '(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])';
+
+      if (validation.includes(FormDataValidation.notEmpty) && currentFormData[index].value === '') {
+        const name = index.charAt(0).toUpperCase() + index.slice(1);
+        currentFormData[index].errorMessage = `${name} is mandatory.`;
+        currentFormData[index].onError = true;
+      } else if (validation.includes(FormDataValidation.isEmail) && currentFormData[index].value.match(emailFormat) == null) {
+        currentFormData[index].errorMessage = `${currentFormData[index].value} is not an email.`;
+        currentFormData[index].onError = true;
+      } else {
+        currentFormData[index].errorMessage = '';
+        currentFormData[index].onError = false;
+      }
+    }
+
+    setFormData({ ...currentFormData });
+  }
+
+  /**
+   * try a login for the current data
+   * @returns {void}
+   */
+  function login(): void {
+    setLoading(true);
+    Api.getInstance().login(formData.email.value, formData.password.value)
+      .then((response: AxiosResponse) => {
+        /* store the token and redirect the user */
+        // console.log('yyyy', response);
+      })
+      .catch((response) => {
+        setError(true);
+        // console.log('xxxx', response);
+      })
+      .finally(() => { setLoading(false); });
+  }
+
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Hello there</Text>
-    </View>
+    <Center flex={1} px='10'>
+      <VStack space={4} alignItems='center'>
+        <FormControl isInvalid={formData.email.onError}>
+          <Input
+            type='text'
+            InputLeftElement={<Icon as={<FontAwesome5 name='user-alt'/>} size={5} ml='2' color='muted.400'/>}
+            placeholder='email'
+            value={formData.email.value}
+            onChangeText={(value: string) => { handleFormData('email', value, [FormDataValidation.notEmpty, FormDataValidation.isEmail]); }}
+          />
+          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs"/>}>
+            {formData.email.errorMessage}
+          </FormControl.ErrorMessage>
+        </FormControl>
+        <FormControl isInvalid={formData.password.onError}>
+          <Input
+            type={show ? 'text' : 'password'}
+            secureTextEntry={!show}
+            InputLeftElement={<Icon as={<FontAwesome5 name='lock'/>} size={5} ml='2' color='muted.400'/>}
+            InputRightElement={<Pressable onPress={() => { setShow(!show); }}>
+              <Icon as={<FontAwesome5 name={show ? 'eye' : 'eye-slash'}/>} size={5} mr='2' color='muted.400'/>
+            </Pressable>}
+            id='password'
+            placeholder='password'
+            value={formData.password.value}
+            onChangeText={(value: string) => { handleFormData('password', value, [FormDataValidation.notEmpty]); }}
+          />
+          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs"/>}>
+            {formData.password.errorMessage}
+          </FormControl.ErrorMessage>
+        </FormControl>
+        <FormControl isInvalid={error}>
+          <SubmitButton text={'Login'} loading={loading} onPress={login} disabled={error} error={error}/>
+          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs"/>}>
+            {formData.formError}
+          </FormControl.ErrorMessage>
+        </FormControl>
+      </VStack>
+    </Center>
   );
 };
 
-export default Home;
+export default Login;
