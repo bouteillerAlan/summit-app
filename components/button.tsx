@@ -7,6 +7,7 @@ export interface SubmitButtonProps {
   loading: boolean
   disabled: boolean
   error: boolean
+  success: boolean
   onPress: () => void
 }
 
@@ -18,16 +19,24 @@ export interface SubmitButtonProps {
 export function SubmitButton(props: SubmitButtonProps): ReactElement {
   let icon = <FontAwesome5 name='unlock-alt'/>;
   let color = 'black';
+
   if (props.loading) {
     icon = <FontAwesome5 name='sync-alt'/>;
   }
+
   if (props.disabled) {
     icon = <FontAwesome5 name='unlock-alt'/>;
     color = 'gray.500';
   }
+
   if (props.error) {
     icon = <FontAwesome5 name='times'/>;
     color = 'red.500';
+  }
+
+  if (props.success) {
+    icon = <FontAwesome5 name='check'/>;
+    color = 'green.500';
   }
 
   return <Button
