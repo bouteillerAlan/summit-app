@@ -1,6 +1,6 @@
+import React, { type ReactElement } from 'react';
 import { Button, Icon } from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { type ReactElement } from 'react';
 
 export interface SubmitButtonProps {
   text: string

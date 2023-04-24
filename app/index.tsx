@@ -1,4 +1,4 @@
-import { type ReactElement, useState } from 'react';
+import React, { type ReactElement, useState } from 'react';
 import { Center, FormControl, Icon, Input, Pressable, VStack, WarningOutlineIcon } from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Api from '../services/api';
