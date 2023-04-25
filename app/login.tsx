@@ -5,6 +5,7 @@ import Api from '../services/api';
 import Storage from '../services/storage';
 import { SubmitButton } from '../components/button';
 import { type AxiosResponse } from 'axios';
+import { useRouter } from 'expo-router';
 
 interface FormError {
   formError: string
@@ -27,6 +28,8 @@ enum FormDataValidation {
 }
 
 const Login = (): ReactElement => {
+  const router = useRouter();
+
   const [show, setShow] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -89,7 +92,7 @@ const Login = (): ReactElement => {
           Storage.getInstance().save('token', response.data.access_token)
             .then((): void => {
               setSuccess(true);
-              // todo - redirect the user to homepage
+              router.replace('/dashboard');
             })
             .catch((): void => {
               castUnexpectedError();
