@@ -2,41 +2,22 @@ import React, { type ReactElement, useState } from 'react';
 import { Center, FormControl, Icon, Input, Pressable, VStack, WarningOutlineIcon } from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Api from '../services/api';
-import Storage from '../services/storage';
 import { SubmitButton } from '../components/button';
 import { type AxiosResponse } from 'axios';
-import { useRouter } from 'expo-router';
+import { useAuth } from '../services/auth';
+import { type AuthCtx, type LoginForm } from '../types/interfaces';
+import { FormDataValidation } from '../types/enum';
 
-interface FormError {
-  formError: string
-}
-
-interface InputState {
-  value: string
-  onError?: boolean
-  errorMessage?: string
-}
-
-interface LoginForm extends FormError {
-  email: InputState
-  password: InputState
-}
-
-enum FormDataValidation {
-  'notEmpty' = 'notEmpty',
-  'isEmail' = 'isEmail'
-}
-
-const Login = (): ReactElement => {
-  const router = useRouter();
-
+const Index = (): ReactElement => {
   const [show, setShow] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
   const [formData, setFormData] = useState<LoginForm>(
-    { password: { value: '' }, email: { value: '' }, formError: '' }
+    { password: { value: '', onError: false }, email: { value: '', onError: false }, formError: '' }
   );
+
+  const auth: AuthCtx | null = useAuth();
 
   /**
    * handle the data assignation and the data check for the form
@@ -77,6 +58,7 @@ const Login = (): ReactElement => {
    */
   function castUnexpectedError(): void {
     setError(true);
+    setSuccess(false);
     setFormData({ ...formData, formError: 'something unexpected happened !' });
   }
 
@@ -88,20 +70,14 @@ const Login = (): ReactElement => {
     setLoading(true);
     Api.getInstance().login(formData.email.value, formData.password.value)
       .then((response: AxiosResponse): void => {
-        if (response.data?.access_token !== undefined) {
-          Storage.getInstance().save('token', response.data.access_token)
-            .then((): void => {
-              setSuccess(true);
-              router.replace('/dashboard');
-            })
-            .catch((): void => {
-              castUnexpectedError();
-            });
+        if (response.data?.access_token !== undefined && auth !== null) {
+          setSuccess(true);
+          auth.signIn(response.data.access_token, castUnexpectedError);
         } else {
           castUnexpectedError();
         }
       })
-      .catch((): void => {
+      .catch((reason): void => {
         setError(true);
         setFormData({ ...formData, formError: 'check your credential' });
       })
@@ -151,4 +127,4 @@ const Login = (): ReactElement => {
   );
 };
 
-export default Login;
+export default Index;
