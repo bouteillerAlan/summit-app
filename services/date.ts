@@ -38,7 +38,7 @@ export default class DateServ {
    * @returns {weekData} the update arrays, if needed
    */
   public prependMissingDay(data: weekData, currentYear: number, currentMonth: number): weekData {
-    if (data.length === 7) return data; // no needs
+    if (data.length === 7) return data; // if the week is full, no needs
 
     const numberOfMissingDay: number = 7 - data.length;
     let m = currentMonth - 1; // in most case we want the previous month
@@ -65,9 +65,32 @@ export default class DateServ {
   /**
    * complete an array of date with the missing date of the next month
    * e.g. : you have the last week of a month but the week, end on friday, the function add saturday and sunday
+   * @param {weekData} data the array you want to clean-up
+   * @param {number} currentYear the current year
+   * @param {number} currentMonth the current month
+   * @returns {weekData} the update arrays, if needed
    */
-  public appendMissingDay() {
-    //
+  public appendMissingDay(data: weekData, currentYear: number, currentMonth: number): weekData {
+    if (data.length === 7) return data; // if the week is full, no needs
+
+    const numberOfMissingDay: number = 7 - data.length;
+    let m = currentMonth + 1; // in most case we want the next month
+    let y = currentYear; // for the current year
+
+    if (currentMonth === 12) { //  if the current month is december
+      m = 1;
+      y = currentYear + 1;
+    }
+
+    // add the missing day
+    for (let i: number = 0; i < numberOfMissingDay; i++) {
+      data = [...data, {
+        date: DateTime.local(y, m, 1 + i),
+        isToday: false
+      }];
+    }
+
+    return data;
   }
 
   /**
@@ -96,26 +119,9 @@ export default class DateServ {
     // if the first week is less than 7 day add the previous month days
     result[0] = this.prependMissingDay(result[0], year, month);
 
-    // todo create a function for that
     // if the last week is less than 7 day add the next month days
     const lastElem = result.length - 1;
-    if (result[lastElem].length < 7) {
-      const numberOfMissingDay: number = 7 - result[lastElem].length;
-      let m = month + 1; // in most case we want the next month
-      let y = year; // for the current year
-
-      if (month === 12) { //  if the current month is december
-        m = 1;
-        y = year + 1;
-      }
-
-      for (let i: number = 0; i < numberOfMissingDay; i++) {
-        result[lastElem] = [...result[lastElem], {
-          date: DateTime.local(y, m, 1 + i),
-          isToday: false
-        }];
-      }
-    }
+    result[lastElem] = this.appendMissingDay(result[lastElem], year, month);
 
     return result;
   }
