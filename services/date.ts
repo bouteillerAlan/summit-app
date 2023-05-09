@@ -76,7 +76,6 @@ export default class DateServ {
     const numberOfMissingDay: number = 7 - data.length;
     let m = currentMonth + 1; // in most case we want the next month
     let y = currentYear; // for the current year
-
     if (currentMonth === 12) { //  if the current month is december
       m = 1;
       y = currentYear + 1;
@@ -98,9 +97,10 @@ export default class DateServ {
    * SET `isToday` FOR THE RIGHT DATE
    * @param {number} month the month number, 0 based
    * @param {number} year the year, not zero based, required to account for leap years
+   * @param {boolean} complete default to true, if you want to complete the first and last week, for having seven days in each week
    * @returns {calendarData} list with date objects for each day of the month
    */
-  public getDaysInMonthSplitByWeek(month: number, year: number): calendarData {
+  public getDaysInMonthSplitByWeek(month: number, year: number, complete: boolean = true): calendarData {
     const dayInMonth: DateTime[] = this.getDaysInMonth(month, year);
     const result: calendarData = [];
     let tempArray: weekData = [];
@@ -116,12 +116,13 @@ export default class DateServ {
       return currentValue;
     }, dayInMonth[0]);
 
-    // if the first week is less than 7 day add the previous month days
-    result[0] = this.prependMissingDay(result[0], year, month);
-
-    // if the last week is less than 7 day add the next month days
-    const lastElem = result.length - 1;
-    result[lastElem] = this.appendMissingDay(result[lastElem], year, month);
+    if (complete) {
+      // if the first week is less than 7 day add the previous month days
+      result[0] = this.prependMissingDay(result[0], year, month);
+      // if the last week is less than 7 day add the next month days
+      const lastElem = result.length - 1;
+      result[lastElem] = this.appendMissingDay(result[lastElem], year, month);
+    }
 
     return result;
   }
