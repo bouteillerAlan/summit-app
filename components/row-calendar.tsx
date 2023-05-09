@@ -8,6 +8,7 @@ const RowCalendar = (): ReactElement => {
   const windowDimensions: ScaledSize = Dimensions.get('window');
   const [dayItemWidth, setDayItemWidth] = useState<number>(0);
   const [dateData, setDateData] = useState<DateTime[][] | undefined>(undefined);
+  const [todayIndex, setTodayIndex] = useState<number>(0);
 
   /**
    * calculate the item dimension for one day, we want the total width split by seven day
@@ -17,6 +18,29 @@ const RowCalendar = (): ReactElement => {
     setDayItemWidth(windowDimensions.width / 7);
     setDateData(getCurrentMonth());
   }, []);
+
+  /**
+   * calculate today index and set it up
+   */
+  useEffect((): void => {
+    if (dateData !== undefined) setTodayIndex(getTodayIndex(dateData));
+  }, [dateData]);
+
+  /**
+   * find the current date sub array into DateTime[][]
+   * @param {DateTime[][]} dateArray data array
+   * @returns {number} the index of the current week
+   */
+  function getTodayIndex (dateArray: DateTime[][]): number {
+    return dateArray.findIndex(
+      (item: DateTime[]): boolean => {
+        // if the sub object check doesn't return -1 the object contain the today date
+        return item.findIndex((subItem: DateTime): boolean => {
+          // if the sub object is today return the index, if not return -1
+          return subItem.toLocaleString(DateTime.DATE_SHORT) === DateTime.now().toLocaleString(DateTime.DATE_SHORT);
+        }) !== -1;
+      });
+  }
 
   /**
    * render the week day
@@ -67,7 +91,7 @@ const RowCalendar = (): ReactElement => {
         snapToInterval={windowDimensions.width}
         decelerationRate={'fast'} // better feedback for the user, the ui stop on the next/previous week and not later
         data={dateData}
-        initialScrollIndex={0}
+        initialScrollIndex={todayIndex}
         getItemLayout={(data: DateTime[][] | null | undefined, index: number): { length: number, offset: number, index: number } => ({
           length: windowDimensions.width, offset: windowDimensions.width * index, index
         })}
