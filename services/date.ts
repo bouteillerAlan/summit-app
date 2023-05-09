@@ -40,16 +40,63 @@ export default class DateServ {
     const dayInMonth: DateTime[] = this.getDaysInMonth(month, year);
     const result: calendarData = [];
     let tempArray: weekData = [];
+    // create the data for the current month
     dayInMonth.reduce((previousValue: DateTime, currentValue: DateTime, currentIndex: number) => {
+      // compare two string without the hours
       const isToday: boolean = currentValue.toLocaleString(DateTime.DATE_SHORT) === DateTime.local().toLocaleString(DateTime.DATE_SHORT);
       tempArray.push({ date: currentValue, isToday });
-      if (currentValue.day === 7 || currentValue.day === 14 || currentValue.day === 21 || currentValue.day === 28 || currentIndex === dayInMonth.length - 1) {
-        // end of week or end of month
+      if (currentValue.weekday === 7 || currentIndex === dayInMonth.length - 1) { // sunday or end of the current month
         result.push(tempArray);
         tempArray = [];
       }
       return currentValue;
     }, dayInMonth[0]);
+
+    // todo create a function for that
+    // if the first week is less than 7 day add the previous month days
+    if (result[0].length < 7) {
+      const numberOfMissingDay: number = 7 - result[0].length;
+      let m = month - 1; // in most case we want the previous month
+      let y = year; // for the current year
+
+      if (month === 1) { // if the current month is january
+        m = 12;
+        y = year - 1;
+      }
+
+      const numberOfDayInThePreviousMonth = DateTime.local(y, m).daysInMonth;
+
+      if (numberOfDayInThePreviousMonth !== undefined) {
+        for (let i: number = 0; i < numberOfMissingDay; i++) {
+          result[0] = [{
+            date: DateTime.local(y, m, numberOfDayInThePreviousMonth - i),
+            isToday: false
+          }, ...result[0]];
+        }
+      }
+    }
+
+    // todo create a function for that
+    // if the last week is less than 7 day add the next month days
+    const lastElem = result.length - 1;
+    if (result[lastElem].length < 7) {
+      const numberOfMissingDay: number = 7 - result[lastElem].length;
+      let m = month + 1; // in most case we want the next month
+      let y = year; // for the current year
+
+      if (month === 12) { //  if the current month is december
+        m = 1;
+        y = year + 1;
+      }
+
+      for (let i: number = 0; i < numberOfMissingDay; i++) {
+        result[lastElem] = [...result[lastElem], {
+          date: DateTime.local(y, m, 1 + i),
+          isToday: false
+        }];
+      }
+    }
+
     return result;
   }
 }
