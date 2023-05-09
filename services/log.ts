@@ -1,7 +1,8 @@
 import { logger } from 'react-native-logs';
 
 /**
- * handle all the call and the response between the app and the api
+ * custom log service, mostly done for the case I need to do something into
+ * the logger without the side effect to refactor all the file
  * this is a singleton
  */
 export default class Log {
