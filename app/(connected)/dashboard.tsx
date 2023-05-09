@@ -1,9 +1,9 @@
 import React, { type ReactElement } from 'react';
-import { Text } from 'native-base';
+import RowCalendar from '../../components/row-calendar';
 
 const Dashboard = (): ReactElement => {
   return (
-    <Text>dashboard page</Text>
+    <RowCalendar/>
   );
 };
 
