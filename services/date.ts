@@ -1,4 +1,5 @@
 import { DateTime, type PossibleDaysInMonth } from 'luxon';
+import type { calendarData, weekData } from '../types/interfaces';
 
 export default class DateServ {
   private static instance: DateServ;
@@ -30,16 +31,18 @@ export default class DateServ {
 
   /**
    * generate an array containing all the day for a given month and year split by week
+   * SET `isToday` FOR THE RIGHT DATE
    * @param {number} month the month number, 0 based
    * @param {number} year the year, not zero based, required to account for leap years
-   * @returns {DateTime[][]} list with date objects for each day of the month
+   * @returns {calendarData} list with date objects for each day of the month
    */
-  public getDaysInMonthSplitByWeek(month: number, year: number): DateTime[][] {
+  public getDaysInMonthSplitByWeek(month: number, year: number): calendarData {
     const dayInMonth: DateTime[] = this.getDaysInMonth(month, year);
-    const result: DateTime[][] = [];
-    let tempArray: DateTime[] = [];
+    const result: calendarData = [];
+    let tempArray: weekData = [];
     dayInMonth.reduce((previousValue: DateTime, currentValue: DateTime, currentIndex: number) => {
-      tempArray.push(currentValue);
+      const isToday: boolean = currentValue.toLocaleString(DateTime.DATE_SHORT) === DateTime.local().toLocaleString(DateTime.DATE_SHORT);
+      tempArray.push({ date: currentValue, isToday });
       if (currentValue.day === 7 || currentValue.day === 14 || currentValue.day === 21 || currentValue.day === 28 || currentIndex === dayInMonth.length - 1) {
         // end of week or end of month
         result.push(tempArray);

@@ -1,3 +1,5 @@
+import { type DateTime } from 'luxon';
+
 export type Token = string | undefined;
 
 export interface FormError {
@@ -19,3 +21,13 @@ export interface AuthCtx {
   signIn: (token: string, callbackError: () => void) => void
   signOut: (callbackError: () => void) => void
 }
+
+export interface dayData {
+  date: DateTime
+  isToday: boolean
+  trainingData?: undefined // todo
+}
+
+export type weekData = dayData[]
+
+export type calendarData = weekData[]
