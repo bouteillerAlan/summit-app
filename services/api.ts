@@ -15,7 +15,7 @@ export default class Api {
      * @type {axios.AxiosInstance}
      */
     this.axs = axios.create({
-      baseURL: 'http://192.168.0.42:3000',
+      baseURL: 'http://192.168.1.148:3000',
       timeout: 5000,
       maxRedirects: 0,
       headers: {

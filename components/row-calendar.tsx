@@ -114,6 +114,14 @@ const RowCalendar = (): ReactElement => {
    */
   function appendData(): void {
     console.log('append');
+
+    if (dateData === undefined) return;
+    // here I assume that the last week is completed (see `getDaysInMonthSplitByWeek` function)
+    const lastDate: dayData = dateData[dateData?.length - 1][6];
+    // we want 4 more weeks
+    for (let i = 1; i < 4; i++) {
+      // todo
+    }
   }
 
   return (
