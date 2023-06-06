@@ -1,4 +1,5 @@
 import { type DateTime } from 'luxon';
+import { type ViewToken } from 'react-native';
 
 export type Token = string | undefined;
 
@@ -31,3 +32,8 @@ export interface dayData {
 export type weekData = dayData[]
 
 export type calendarData = weekData[]
+
+export interface onViewableItemsChangedInfo {
+  viewableItems: ViewToken[]
+  changed: ViewToken[]
+}

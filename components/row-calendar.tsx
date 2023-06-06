@@ -1,5 +1,5 @@
-import React, { Fragment, type ReactElement, useEffect, useState } from 'react';
-import { Box, Center, FlatList, HStack } from 'native-base';
+import React, { Fragment, type ReactElement, useEffect, useRef, useState } from 'react';
+import { Box, Center, FlatList, HStack, Text } from 'native-base';
 import DateServ from '../services/date';
 import { DateTime, type PossibleDaysInMonth } from 'luxon';
 import {
@@ -9,13 +9,14 @@ import {
   type NativeSyntheticEvent,
   type ScaledSize
 } from 'react-native';
-import type { calendarData, dayData, weekData } from '../types/interfaces';
+import type { calendarData, dayData, weekData, onViewableItemsChangedInfo } from '../types/interfaces';
 
 const RowCalendar = (): ReactElement => {
   const windowDimensions: ScaledSize = Dimensions.get('window');
   const [dayItemWidth, setDayItemWidth] = useState<number>(0);
   const [dateData, setDateData] = useState<calendarData | undefined>(undefined);
   const [todayIndex, setTodayIndex] = useState<number>(0);
+  const [currentObjectInfo, setCurrentObjectInfo] = useState<onViewableItemsChangedInfo | undefined>(undefined);
 
   /**
    * calculate the item dimension for one day, we want the total width split by seven day
@@ -32,6 +33,14 @@ const RowCalendar = (): ReactElement => {
   useEffect((): void => {
     if (dateData !== undefined) setTodayIndex(getTodayIndex(dateData));
   }, [dateData]);
+
+  /**
+   * useRef for the flatList, give the possibility to get the current data seen by the user
+   * update state
+   */
+  const onViewableItemsChanged: React.MutableRefObject<(info: onViewableItemsChangedInfo) => void> = useRef((info: onViewableItemsChangedInfo): void => {
+    setCurrentObjectInfo(info);
+  });
 
   /**
    * find the current date sub array into `calendarData`
@@ -157,6 +166,10 @@ const RowCalendar = (): ReactElement => {
 
   return (
     <Box>
+      {(currentObjectInfo !== undefined) && <Text>
+        {currentObjectInfo.viewableItems[0].item[0].date.monthLong} - {currentObjectInfo.viewableItems[0].item[0].date.year}
+      </Text>
+      }
       <HStack justifyContent='center'>
         {generateCurrentWeek()}
       </HStack>
@@ -178,6 +191,9 @@ const RowCalendar = (): ReactElement => {
         onScroll={(event: NativeSyntheticEvent<NativeScrollEvent>): void => { handleScroll(event); }}
         onEndReachedThreshold={0.5}
         onEndReached={(): void => { appendData(); }}
+        // 50 means that item is considered visible if it is visible for more than 50 percents
+        viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
+        onViewableItemsChanged={onViewableItemsChanged.current}
       />}
     </Box>
   );
