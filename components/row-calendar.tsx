@@ -1,7 +1,7 @@
 import React, { Fragment, type ReactElement, useEffect, useState } from 'react';
 import { Box, Center, FlatList, HStack } from 'native-base';
 import DateServ from '../services/date';
-import { DateTime } from 'luxon';
+import { DateTime, type PossibleDaysInMonth } from 'luxon';
 import {
   Dimensions,
   type ListRenderItemInfo,
@@ -38,7 +38,7 @@ const RowCalendar = (): ReactElement => {
    * @param {calendarData} dateArray date array
    * @returns {number} the index of the current week
    */
-  function getTodayIndex (dateArray: calendarData): number {
+  function getTodayIndex(dateArray: calendarData): number {
     return dateArray.findIndex(
       (item: weekData): boolean => {
         // if the sub object check doesn't return -1 the object contain the today date
@@ -72,6 +72,15 @@ const RowCalendar = (): ReactElement => {
   }
 
   /**
+   * get an array of date representing the month for the given date
+   * @param {DateTime} date luxon date object for the month you want -- day is doesn't used
+   * @returns {calendarData} array of array of luxon DateTime, each sub array is a week
+   */
+  function getAMonth(date: DateTime): calendarData {
+    return DateServ.getInstance().getDaysInMonthSplitByWeek(date.month, date.year);
+  }
+
+  /**
    * render the component for the day row for the `flatlist`
    * @param {weekData} week array luxon DateTime
    * @returns {ReactElement[]}  the Element itself
@@ -83,7 +92,7 @@ const RowCalendar = (): ReactElement => {
           key={value.date.toString()} h={'10'} w={dayItemWidth}
           bg={value.isToday ? 'red.200' : `primary.${index + 1}00`}
         >
-          {value.date.day}
+          {value.date.toString()}
         </Center>
       );
     });
@@ -113,15 +122,37 @@ const RowCalendar = (): ReactElement => {
    * @returns {void}
    */
   function appendData(): void {
-    console.log('append');
+    // in this function I assume that the last week is (maybe) completed (see `getDaysInMonthSplitByWeek` function)
 
+    // get the last date show to the user, the [6] represent sunday
     if (dateData === undefined) return;
-    // here I assume that the last week is completed (see `getDaysInMonthSplitByWeek` function)
     const lastDate: dayData = dateData[dateData?.length - 1][6];
-    // we want 4 more weeks
-    for (let i = 1; i < 4; i++) {
-      // todo
+
+    // get the size of the last date month
+    const lastDateMonthSize: PossibleDaysInMonth | undefined = lastDate.date.daysInMonth;
+
+    // if the last date show to the user is equal to the length of the month we need the next month
+    // (that mean the date is the last date of the month) otherwise we need the same month
+    let nextDateData;
+    if (lastDateMonthSize === lastDate.date.day) {
+      // use a new object for working (luxon date are immutable, so I use a `let` for avoiding working with a lot of unuseful `const`)
+      let d: DateTime = DateTime.local(lastDate.date.year, lastDate.date.month, lastDate.date.day);
+      d = d.plus({ month: 1 });
+      // if the date is also the last of the year we need to add one year
+      if (d.month === 12 && d.day === 31) {
+        // set the date to 1 january d.year+1
+        d = d.plus({ year: 1 });
+        d = d.set({ month: 1, day: 1 });
+      }
+      nextDateData = getAMonth(d);
+    } else {
+      nextDateData = getAMonth(lastDate.date);
+      // because `getDaysInMonthSplitByWeek` function add days into the first and last week for having a full first and last week (with 7 days)
+      // we need to remove the first week of the new data because the data is already present into `dateData`
+      nextDateData.shift();
     }
+
+    setDateData([...dateData, ...nextDateData]);
   }
 
   return (
