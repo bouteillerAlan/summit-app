@@ -1,6 +1,26 @@
 {
   "name": "summit-app",
   "version": "1.0.0",
+  "description": "Mobile summit app",
+  "author": {
+    "name": "Alan <A2N> Bouteiller",
+    "email": "a2n.dev@pm.me",
+    "url": "https://github.com/bouteillerAlan"
+  },
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/bouteillerAlan/summit-app",
+  "bugs": {
+    "url": "https://github.com/bouteillerAlan/summit-app/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bouteillerAlan/summit-app.git"
+  },
+  "packageManager": "yarn@3.6.0",
+  "engines": {
+    "node": ">=18.16.0",
+    "yarn": ">=3.6.0"
+  },
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -39,7 +59,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
-    "@types/axios": "^0.14.0",
     "@types/luxon": "^3.3.0",
     "@types/react": "~18.0.38",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
@@ -53,6 +72,5 @@
     "jest-expo": "~48.0.0",
     "react-test-renderer": "18.2.0",
     "typescript": "^5.0.4"
-  },
-  "private": true
+  }
 }
