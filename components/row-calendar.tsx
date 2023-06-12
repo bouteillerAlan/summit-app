@@ -1,5 +1,5 @@
 import React, { Fragment, type ReactElement, useEffect, useRef, useState } from 'react';
-import { Box, Center, FlatList, HStack, Text } from 'native-base';
+import { Box, Button, Center, FlatList, HStack, Text } from 'native-base';
 import DateServ from '../services/date';
 import { DateTime, type PossibleDaysInMonth } from 'luxon';
 import {
@@ -13,17 +13,20 @@ import type { calendarData, dayData, weekData, onViewableItemsChangedInfo } from
 
 const RowCalendar = (): ReactElement => {
   const windowDimensions: ScaledSize = Dimensions.get('window');
-  const [dayItemWidth, setDayItemWidth] = useState<number>(0);
+  const dayItemWidth = useRef<number>(0);
+  const dateFlatList = useRef();
+  const onViewableItemsChanged = useRef((info: onViewableItemsChangedInfo): void => { setCurrentObjectInfo(info); });
   const [dateData, setDateData] = useState<calendarData | undefined>(undefined);
   const [todayIndex, setTodayIndex] = useState<number>(0);
   const [currentObjectInfo, setCurrentObjectInfo] = useState<onViewableItemsChangedInfo | undefined>(undefined);
+  const [flatListRefreshing, setFlatListRefreshing] = useState<boolean>(false);
 
   /**
    * calculate the item dimension for one day, we want the total width split by seven day
    * load up the data for the date when the user arrived to this screen
    */
   useEffect((): void => {
-    setDayItemWidth(windowDimensions.width / 7);
+    dayItemWidth.current = windowDimensions.width / 7;
     setDateData(getCurrentMonth());
   }, []);
 
@@ -35,14 +38,6 @@ const RowCalendar = (): ReactElement => {
   }, [dateData]);
 
   /**
-   * useRef for the flatList, give the possibility to get the current data seen by the user
-   * update state
-   */
-  const onViewableItemsChanged: React.MutableRefObject<(info: onViewableItemsChangedInfo) => void> = useRef((info: onViewableItemsChangedInfo): void => {
-    setCurrentObjectInfo(info);
-  });
-
-  /**
    * find the current date sub array into `calendarData`
    * @param {calendarData} dateArray date array
    * @returns {number} the index of the current week
@@ -50,7 +45,7 @@ const RowCalendar = (): ReactElement => {
   function getTodayIndex(dateArray: calendarData): number {
     return dateArray.findIndex(
       (item: weekData): boolean => {
-        // if the sub object check doesn't return -1 the object contain the today date
+        // if the checked sub object doesn't return -1 the object contain the today date
         return item.findIndex((subItem: dayData): boolean => {
           return subItem.isToday;
         }) !== -1;
@@ -64,7 +59,7 @@ const RowCalendar = (): ReactElement => {
   function generateCurrentWeek(): ReactElement[] {
     return ['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((value: string, index: number) => {
       return (
-        <Center key={index} h={'10'} w={'14.28%'} bg={'primary.500'}>
+        <Center key={index} h={'10'} w={dayItemWidth.current} bg={'primary.500'}>
           {value}
         </Center>
       );
@@ -76,8 +71,11 @@ const RowCalendar = (): ReactElement => {
    * @returns {calendarData} array of array of luxon DateTime, each sub array is a week
    */
   function getCurrentMonth(): calendarData {
+    setFlatListRefreshing(true);
     const now: DateTime = DateTime.now();
-    return DateServ.getInstance().getDaysInMonthSplitByWeek(now.month, now.year);
+    const data = DateServ.getInstance().getDaysInMonthSplitByWeek(now.month, now.year);
+    setFlatListRefreshing(false);
+    return data;
   }
 
   /**
@@ -98,10 +96,10 @@ const RowCalendar = (): ReactElement => {
     return week.map((value: dayData, index: number) => {
       return (
         <Center
-          key={value.date.toString()} h={'10'} w={dayItemWidth}
+          key={value.date.toString()} h={'10'} w={dayItemWidth.current}
           bg={value.isToday ? 'red.200' : `primary.${index + 1}00`}
         >
-          {value.date.toString()}
+          {value.date.day}
         </Center>
       );
     });
@@ -119,11 +117,64 @@ const RowCalendar = (): ReactElement => {
   }
 
   /**
+   * set the given index for the flatlist
+   * @param {number} index the index you want the flatlist to be
+   * @param {boolean} isAnimated if you want an animated transition
+   */
+  function gotToIndex(index: number, isAnimated: boolean): void {
+    if (dateFlatList.current !== undefined) {
+      // @ts-expect-error todo what type is used for the flatList ??
+      dateFlatList.current.scrollToIndex({ index, animated: isAnimated });
+    }
+  }
+
+  /**
    * prepend data to `dateData`
    * @returns {void}
    */
   function prependData(): void {
-    console.log('prepend');
+    // in this function I assume that the first week is (maybe) completed (see `getDaysInMonthSplitByWeek` function)
+
+    setFlatListRefreshing(true);
+
+    // get the first date show to the user
+    // the first [0] represent the first week, the last [0] represent monday
+    if (dateData === undefined) return;
+    const firstDate: dayData = dateData[0][0];
+
+    // if the first date show to the user is equal to 1 we need the previous month
+    // (if 1 mean that monday is the first day of the current month, so we have a no completed week)
+    // otherwise we need the same month
+    let previousDateData;
+    if (firstDate.date.day === 1) {
+      // use a new object for working (luxon date are immutable, so I use a `let` for avoiding working with a lot of unuseful `const`)
+      let d: DateTime = DateTime.local(firstDate.date.year, firstDate.date.month, firstDate.date.day);
+      d = d.minus({ month: 1 });
+      // if the date is also the first of the year we need to remove one year
+      if (d.month === 1 && d.day === 1) {
+        // set the date to 1 december d.year-1
+        d = d.minus({ year: 1 });
+        d = d.set({ month: 12, day: 1 });
+      }
+      previousDateData = getAMonth(d);
+    } else {
+      previousDateData = getAMonth(firstDate.date);
+      // because `getDaysInMonthSplitByWeek` function add days into the first and last week for having a full first and last week (with 7 days)
+      // we need to remove the last week of the new data because the data is already present into `dateData`
+      previousDateData.pop();
+    }
+
+    // save the current index before adding any data
+    // and add the new array length for having the new index
+    let indexToMove: number = 0;
+    if (typeof currentObjectInfo?.viewableItems[0].index === 'number') {
+      indexToMove = currentObjectInfo?.viewableItems[0].index;
+      indexToMove = indexToMove + previousDateData.length;
+    }
+
+    setDateData([...previousDateData, ...dateData]);
+    gotToIndex(indexToMove, false);
+    setFlatListRefreshing(false);
   }
 
   /**
@@ -132,6 +183,8 @@ const RowCalendar = (): ReactElement => {
    */
   function appendData(): void {
     // in this function I assume that the last week is (maybe) completed (see `getDaysInMonthSplitByWeek` function)
+
+    setFlatListRefreshing(true);
 
     // get the last date show to the user, the [6] represent sunday
     if (dateData === undefined) return;
@@ -162,18 +215,26 @@ const RowCalendar = (): ReactElement => {
     }
 
     setDateData([...dateData, ...nextDateData]);
+    setFlatListRefreshing(false);
   }
 
   return (
     <Box>
-      {(currentObjectInfo !== undefined) && <Text>
-        {currentObjectInfo.viewableItems[0].item[0].date.monthLong} - {currentObjectInfo.viewableItems[0].item[0].date.year}
-      </Text>
-      }
-      <HStack justifyContent='center'>
+      <HStack alignItems={'center'} m={1}>
+        <Button size={'xs'} w={20} marginRight={2} onPress={() => { gotToIndex(todayIndex, true); }}>Today</Button>
+        {(currentObjectInfo !== undefined) && <Text>
+          {currentObjectInfo.viewableItems[0].item[0].date.monthLong} - {currentObjectInfo.viewableItems[0].item[0].date.year}
+        </Text>
+        }
+      </HStack>
+
+      <HStack justifyContent={'center'}>
         {generateCurrentWeek()}
       </HStack>
+
       {(dateData !== undefined) && <FlatList
+        ref={dateFlatList}
+        refreshing={flatListRefreshing}
         horizontal={true}
         snapToAlignment={'start'}
         snapToInterval={windowDimensions.width} // set the swap on the whole elem, like so the user switch week by week
@@ -191,7 +252,7 @@ const RowCalendar = (): ReactElement => {
         onScroll={(event: NativeSyntheticEvent<NativeScrollEvent>): void => { handleScroll(event); }}
         onEndReachedThreshold={0.5}
         onEndReached={(): void => { appendData(); }}
-        // 50 means that item is considered visible if it is visible for more than 50 percents
+        // 50 means that item is considered visible if it's visible for more than 50 percents
         viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
         onViewableItemsChanged={onViewableItemsChanged.current}
       />}
