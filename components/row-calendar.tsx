@@ -1,5 +1,5 @@
 import React, { Fragment, type ReactElement, useEffect, useRef, useState } from 'react';
-import { Box, Button, Center, FlatList, HStack, Text } from 'native-base';
+import { Box, Button, Center, FlatList, HStack, Icon, Text } from 'native-base';
 import DateServ from '../services/date';
 import { DateTime, type PossibleDaysInMonth } from 'luxon';
 import {
@@ -10,6 +10,7 @@ import {
   type ScaledSize
 } from 'react-native';
 import type { calendarData, dayData, weekData, onViewableItemsChangedInfo } from '../types/interfaces';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const RowCalendar = (): ReactElement => {
   const windowDimensions: ScaledSize = Dimensions.get('window');
@@ -17,7 +18,8 @@ const RowCalendar = (): ReactElement => {
   const dateFlatList = useRef();
   const onViewableItemsChanged = useRef((info: onViewableItemsChangedInfo): void => { setCurrentObjectInfo(info); });
   const [dateData, setDateData] = useState<calendarData | undefined>(undefined);
-  const [todayIndex, setTodayIndex] = useState<number>(0);
+  const [currentWeekIndex, setCurrentWeekIndex] = useState<number>(0);
+  const [today, setToday] = useState<dayData | undefined>(undefined);
   const [currentObjectInfo, setCurrentObjectInfo] = useState<onViewableItemsChangedInfo | undefined>(undefined);
   const [flatListRefreshing, setFlatListRefreshing] = useState<boolean>(false);
 
@@ -34,22 +36,28 @@ const RowCalendar = (): ReactElement => {
    * calculate today index and set it up
    */
   useEffect((): void => {
-    if (dateData !== undefined) setTodayIndex(getTodayIndex(dateData));
+    if (dateData !== undefined) {
+      setCurrentWeekIndex(getTodayData(dateData).index);
+      setToday(getTodayData(dateData).date);
+    }
   }, [dateData]);
 
   /**
    * find the current date sub array into `calendarData`
    * @param {calendarData} dateArray date array
-   * @returns {number} the index of the current week
+   * @returns {{ index: number, date?: dayData }} the index of the current week and the dayData for the current day
    */
-  function getTodayIndex(dateArray: calendarData): number {
-    return dateArray.findIndex(
+  function getTodayData(dateArray: calendarData): { index: number, date?: dayData } {
+    const data: { index: number, date?: dayData } = { index: 0, date: undefined };
+    data.index = dateArray.findIndex(
       (item: weekData): boolean => {
         // if the checked sub object doesn't return -1 the object contain the today date
         return item.findIndex((subItem: dayData): boolean => {
+          if (subItem.isToday) data.date = subItem;
           return subItem.isToday;
         }) !== -1;
       });
+    return data;
   }
 
   /**
@@ -59,7 +67,7 @@ const RowCalendar = (): ReactElement => {
   function generateCurrentWeek(): ReactElement[] {
     return ['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((value: string, index: number) => {
       return (
-        <Center key={index} h={'10'} w={dayItemWidth.current} bg={'primary.500'}>
+        <Center key={index} h={'10'} w={dayItemWidth.current} bg={'gray.200'}>
           {value}
         </Center>
       );
@@ -97,7 +105,7 @@ const RowCalendar = (): ReactElement => {
       return (
         <Center
           key={value.date.toString()} h={'10'} w={dayItemWidth.current}
-          bg={value.isToday ? 'red.200' : `primary.${index + 1}00`}
+          bg={value.isToday ? 'red.200' : 'gray.200'}
         >
           {value.date.day}
         </Center>
@@ -220,12 +228,32 @@ const RowCalendar = (): ReactElement => {
 
   return (
     <Box>
-      <HStack alignItems={'center'} m={1}>
-        <Button size={'xs'} w={20} marginRight={2} onPress={() => { gotToIndex(todayIndex, true); }}>Today</Button>
-        {(currentObjectInfo !== undefined) && <Text>
-          {currentObjectInfo.viewableItems[0].item[0].date.monthLong} - {currentObjectInfo.viewableItems[0].item[0].date.year}
-        </Text>
-        }
+      <HStack alignItems={'center'} justifyContent={'space-between'} m={1}>
+        <HStack alignItems={'center'}>
+          <Button
+            size={'xs'}
+            variant={'outline'}
+            w={10}
+            marginRight={2}
+            isLoading={flatListRefreshing}
+            style={{ borderColor: 'black' }}
+            _text={{ color: 'black' }}
+            onPress={() => { gotToIndex(currentWeekIndex, true); }}
+          >
+            {today?.date.day}
+          </Button>
+          {(currentObjectInfo !== undefined) && <Text>
+            {currentObjectInfo.viewableItems[0].item[0].date.monthLong} - {currentObjectInfo.viewableItems[0].item[0].date.year}
+          </Text>
+          }
+        </HStack>
+        <Button
+          variant={'ghost'}
+          w={10}
+          _text={{ color: 'black' }}
+          onPress={() => { }}
+          startIcon={<Icon as={<FontAwesome5 name='plus'/>} size={'sm'} color={'black'}/>}
+        />
       </HStack>
 
       <HStack justifyContent={'center'}>
@@ -240,7 +268,7 @@ const RowCalendar = (): ReactElement => {
         snapToInterval={windowDimensions.width} // set the swap on the whole elem, like so the user switch week by week
         decelerationRate={'fast'} // better feedback for the user, the ui stop on the next/previous week and not later
         data={dateData}
-        initialScrollIndex={todayIndex}
+        initialScrollIndex={currentWeekIndex}
         // `getItemLayout` is needed by `initialScrollIndex` to work
         getItemLayout={(data: calendarData | null | undefined, index: number): { length: number, offset: number, index: number } => ({
           length: windowDimensions.width, offset: windowDimensions.width * index, index
