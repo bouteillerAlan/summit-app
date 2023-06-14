@@ -1,5 +1,7 @@
+// todo idea of optimisation = if the dateData array bypass a certain length, cut the end or the beginning of the array
+
 import React, { Fragment, type ReactElement, useEffect, useRef, useState } from 'react';
-import { Box, Button, Center, FlatList, HStack, Icon, Text } from 'native-base';
+import { Box, Button, Center, FlatList, HStack, Icon, Pressable, Text } from 'native-base';
 import DateServ from '../services/date';
 import { DateTime, type PossibleDaysInMonth } from 'luxon';
 import {
@@ -96,19 +98,52 @@ const RowCalendar = (): ReactElement => {
   }
 
   /**
+   * PURELY ESTHETICS - clean and set the calendar data in function of the user press action on a day
+   * @param {dayData} data pressed date
+   */
+  function dateIsPressed(data: dayData): void {
+    // todo - not the more optimized stuff for that kind of feature
+
+    // clean the array of any "pressed" days
+    if (dateData !== undefined) {
+      for (let weekIndex: number = 0; weekIndex < dateData.length; weekIndex++) {
+        const isCleared: boolean = dateData[weekIndex].some((value: dayData, index: number) => {
+          if (value.isPressed) dateData[weekIndex][index].isPressed = false;
+          return value.isPressed;
+        });
+        if (isCleared) return; // avoid unuseful work
+      }
+
+      // set the new "pressed" day
+      data.isPressed = true;
+    }
+  }
+
+  /**
    * render the component for the day row for the `flatlist`
    * @param {weekData} week array luxon DateTime
    * @returns {ReactElement[]}  the Element itself
    */
   function dayComponent(week: weekData): ReactElement[] {
-    return week.map((value: dayData, index: number) => {
+    return week.map((value: dayData) => {
       return (
-        <Center
-          key={value.date.toString()} h={'10'} w={dayItemWidth.current}
+        <Pressable
+          onPress={() => { dateIsPressed(value); }}
+          key={value.date.toString()}
+          h={'10'}
+          w={dayItemWidth.current}
           bg={value.isToday ? 'red.200' : 'gray.200'}
-        >
-          {value.date.day}
-        </Center>
+          _pressed={value.isToday ? { bgColor: 'red.300' } : { bgColor: 'gray.300' }}
+          justifyContent={'center'}
+          alignItems={'center'}
+          children={() => {
+            return (
+              <Box h={8} w={8} borderColor={'black'} borderWidth={value.isPressed ? 1 : 0} borderRadius={50} justifyContent={'center'} alignItems={'center'}>
+                {value.date.day}
+              </Box>
+            );
+          }}
+        />
       );
     });
   }

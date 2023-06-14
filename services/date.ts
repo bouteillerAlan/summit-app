@@ -54,7 +54,8 @@ export default class DateServ {
       for (let i: number = 0; i < numberOfMissingDay; i++) {
         data = [{
           date: DateTime.local(y, m, numberOfDayInThePreviousMonth - i),
-          isToday: false
+          isToday: false,
+          isPressed: false
         }, ...data];
       }
     }
@@ -85,7 +86,8 @@ export default class DateServ {
     for (let i: number = 0; i < numberOfMissingDay; i++) {
       data = [...data, {
         date: DateTime.local(y, m, 1 + i),
-        isToday: false
+        isToday: false,
+        isPressed: false
       }];
     }
 
@@ -108,7 +110,7 @@ export default class DateServ {
     dayInMonth.reduce((previousValue: DateTime, currentValue: DateTime, currentIndex: number) => {
       // compare two string without the hours
       const isToday: boolean = currentValue.toLocaleString(DateTime.DATE_SHORT) === DateTime.local().toLocaleString(DateTime.DATE_SHORT);
-      tempArray.push({ date: currentValue, isToday });
+      tempArray.push({ date: currentValue, isToday, isPressed: isToday });
       if (currentValue.weekday === 7 || currentIndex === dayInMonth.length - 1) { // sunday or end of the current month
         result.push(tempArray);
         tempArray = [];

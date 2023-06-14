@@ -26,6 +26,7 @@ export interface AuthCtx {
 export interface dayData {
   date: DateTime
   isToday: boolean
+  isPressed: boolean // only for certain case, when the day is a button or a pressable
   trainingData?: undefined // todo
 }
 
