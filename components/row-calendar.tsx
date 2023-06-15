@@ -1,4 +1,5 @@
 // todo idea of optimisation = if the dateData array bypass a certain length, cut the end or the beginning of the array
+// if done optimize dateIsPressed and the flatList scroll
 
 import React, { Fragment, type ReactElement, useEffect, useRef, useState } from 'react';
 import { Box, Button, Center, FlatList, HStack, Icon, Pressable, Text } from 'native-base';
@@ -11,7 +12,7 @@ import {
   type NativeSyntheticEvent,
   type ScaledSize
 } from 'react-native';
-import type { calendarData, dayData, weekData, onViewableItemsChangedInfo } from '../types/interfaces';
+import type { calendarData, dayData, weekData, onViewableItemsChangedInfo, pressedDayCoordinate } from '../types/interfaces';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 const RowCalendar = (): ReactElement => {
@@ -24,6 +25,7 @@ const RowCalendar = (): ReactElement => {
   const [today, setToday] = useState<dayData | undefined>(undefined);
   const [currentObjectInfo, setCurrentObjectInfo] = useState<onViewableItemsChangedInfo | undefined>(undefined);
   const [flatListRefreshing, setFlatListRefreshing] = useState<boolean>(false);
+  const [pressedDayCoordinate, setPressedDayCoordinate] = useState<pressedDayCoordinate>({ weekIndex: 0, dayIndex: 0 });
 
   /**
    * calculate the item dimension for one day, we want the total width split by seven day
@@ -39,7 +41,7 @@ const RowCalendar = (): ReactElement => {
    */
   useEffect((): void => {
     if (dateData !== undefined) {
-      setCurrentWeekIndex(getTodayData(dateData).index);
+      setCurrentWeekIndex(getTodayData(dateData).weekIndex);
       setToday(getTodayData(dateData).date);
     }
   }, [dateData]);
@@ -47,15 +49,18 @@ const RowCalendar = (): ReactElement => {
   /**
    * find the current date sub array into `calendarData`
    * @param {calendarData} dateArray date array
-   * @returns {{ index: number, date?: dayData }} the index of the current week and the dayData for the current day
+   * @returns {{ index: number, dateIndex: number, date?: dayData }} the index of the current week and day + the dayData for the current day
    */
-  function getTodayData(dateArray: calendarData): { index: number, date?: dayData } {
-    const data: { index: number, date?: dayData } = { index: 0, date: undefined };
-    data.index = dateArray.findIndex(
+  function getTodayData(dateArray: calendarData): { weekIndex: number, dateIndex: number, date?: dayData } {
+    const data: { weekIndex: number, dateIndex: number, date?: dayData } = { weekIndex: 0, dateIndex: 0, date: undefined };
+    data.weekIndex = dateArray.findIndex(
       (item: weekData): boolean => {
         // if the checked sub object doesn't return -1 the object contain the today date
-        return item.findIndex((subItem: dayData): boolean => {
-          if (subItem.isToday) data.date = subItem;
+        return item.findIndex((subItem: dayData, index: number): boolean => {
+          if (subItem.isToday) {
+            data.date = subItem;
+            data.dateIndex = index;
+          }
           return subItem.isToday;
         }) !== -1;
       });
@@ -84,6 +89,8 @@ const RowCalendar = (): ReactElement => {
     setFlatListRefreshing(true);
     const now: DateTime = DateTime.now();
     const data = DateServ.getInstance().getDaysInMonthSplitByWeek(now.month, now.year);
+    // set the current "pressed" day
+    setPressedDayCoordinate({ weekIndex: getTodayData(data).weekIndex, dayIndex: getTodayData(data).dateIndex });
     setFlatListRefreshing(false);
     return data;
   }
@@ -99,36 +106,33 @@ const RowCalendar = (): ReactElement => {
 
   /**
    * PURELY ESTHETICS - clean and set the calendar data in function of the user press action on a day
-   * @param {dayData} data pressed date
+   * @param {dayData} pressedDayData pressed date and data
+   * @param {number} pressedDayIndex the pressed day index
+   * @param {ListRenderItemInfo<weekData>} pressedWeekData pressed week and react data
    */
-  function dateIsPressed(data: dayData): void {
-    // todo - not the more optimized stuff for that kind of feature
-
-    // clean the array of any "pressed" days
+  function dateIsPressed(pressedDayData: dayData, pressedDayIndex: number, pressedWeekData: ListRenderItemInfo<weekData>): void {
     if (dateData !== undefined) {
-      for (let weekIndex: number = 0; weekIndex < dateData.length; weekIndex++) {
-        const isCleared: boolean = dateData[weekIndex].some((value: dayData, index: number) => {
-          if (value.isPressed) dateData[weekIndex][index].isPressed = false;
-          return value.isPressed;
-        });
-        if (isCleared) return; // avoid unuseful work
-      }
-
+      const tempArray: calendarData = [...dateData];
+      // clean the old "pressed" day
+      tempArray[pressedDayCoordinate.weekIndex][pressedDayCoordinate.dayIndex].isPressed = false;
       // set the new "pressed" day
-      data.isPressed = true;
+      tempArray[pressedWeekData.index][pressedDayIndex].isPressed = true;
+      // set the current "pressed" day
+      setPressedDayCoordinate({ weekIndex: pressedWeekData.index, dayIndex: pressedDayIndex });
+      setDateData(tempArray);
     }
   }
 
   /**
    * render the component for the day row for the `flatlist`
-   * @param {weekData} week array luxon DateTime
+   * @param {ListRenderItemInfo<weekData>} week the week react information
    * @returns {ReactElement[]}  the Element itself
    */
-  function dayComponent(week: weekData): ReactElement[] {
-    return week.map((value: dayData) => {
+  function dayComponent(week: ListRenderItemInfo<weekData>): ReactElement[] {
+    return week.item.map((value: dayData, index: number) => {
       return (
         <Pressable
-          onPress={() => { dateIsPressed(value); }}
+          onPress={() => { dateIsPressed(value, index, week); }}
           key={value.date.toString()}
           h={'10'}
           w={dayItemWidth.current}
@@ -310,7 +314,7 @@ const RowCalendar = (): ReactElement => {
         })}
         keyExtractor={(item: weekData, index: number): string => index.toString()}
         // for some reason the type accept only ReactElement and not ReactElement[] so I put the return into this ugly `Fragment`
-        renderItem={(week: ListRenderItemInfo<weekData>): ReactElement => <Fragment>{dayComponent(week.item)}</Fragment>}
+        renderItem={(week: ListRenderItemInfo<weekData>): ReactElement => <Fragment>{dayComponent(week)}</Fragment>}
         // use `onScroll` to handle the data when the user reach the start
         onScroll={(event: NativeSyntheticEvent<NativeScrollEvent>): void => { handleScroll(event); }}
         onEndReachedThreshold={0.5}

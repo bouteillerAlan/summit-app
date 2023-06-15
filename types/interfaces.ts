@@ -38,3 +38,8 @@ export interface onViewableItemsChangedInfo {
   viewableItems: ViewToken[]
   changed: ViewToken[]
 }
+
+export interface pressedDayCoordinate {
+  weekIndex: number
+  dayIndex: number
+}
