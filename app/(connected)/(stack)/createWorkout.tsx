@@ -1,9 +1,11 @@
 import React, { type ReactElement } from 'react';
-import { Text } from 'native-base';
+import { View, Text } from 'native-base';
 
 const CreateWorkout = (): ReactElement => {
   return (
-    <Text>CreateWorkout page</Text>
+    <View>
+      <Text>CreateWorkout</Text>
+    </View>
   );
 };
 

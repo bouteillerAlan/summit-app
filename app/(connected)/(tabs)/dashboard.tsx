@@ -1,9 +1,9 @@
 import React, { type ReactElement, useState } from 'react';
-import RowCalendar from '../../components/row-calendar';
-import { type dayData } from '../../types/interfaces';
+import RowCalendar from '../../../components/row-calendar';
+import { type dayData } from '../../../types/interfaces';
 import { View, Text } from 'native-base';
 import { DateTime } from 'luxon';
-import SafeView from '../../components/safeView';
+import SafeView from '../../../components/safeView';
 
 const Dashboard = (): ReactElement => {
   // first load is today

@@ -21,9 +21,11 @@ import type {
   RowCalendarProps
 } from '../types/interfaces';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 const RowCalendar = (props: RowCalendarProps): ReactElement => {
   const windowDimensions: ScaledSize = Dimensions.get('window');
+  const router = useRouter();
   const dayItemWidth = useRef<number>(0);
   const dateFlatList = useRef();
   const onViewableItemsChanged = useRef((info: onViewableItemsChangedInfo): void => { setCurrentObjectInfo(info); });
@@ -298,7 +300,7 @@ const RowCalendar = (props: RowCalendarProps): ReactElement => {
           variant={'ghost'}
           w={10}
           _text={{ color: 'black' }}
-          onPress={() => { }}
+          onPress={() => { router.push('(stack)/createWorkout'); }}
           startIcon={<Icon as={<FontAwesome5 name='plus'/>} size={'sm'} color={'black'}/>}
         />
       </HStack>
