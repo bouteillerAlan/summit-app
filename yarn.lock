@@ -7132,6 +7132,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-device@npm:^5.2.1":
+  version: 5.3.0
+  resolution: "expo-device@npm:5.3.0"
+  dependencies:
+    ua-parser-js: ^0.7.33
+  peerDependencies:
+    expo: "*"
+  checksum: 08e136e5ebf40215a3062956d7aad09b8446462ac91a173a52625aab17a778fbb8757a9d09b2aed3a8be2e463f5f157d3f14e4267e8e61cd914c67167b5e55c4
+  languageName: node
+  linkType: hard
+
 "expo-file-system@npm:~15.2.0, expo-file-system@npm:~15.2.2":
   version: 15.2.2
   resolution: "expo-file-system@npm:15.2.2"
@@ -13511,6 +13522,7 @@ __metadata:
     eslint-plugin-n: ^15.6.1
     eslint-plugin-promise: ^6.1.1
     expo: ~48.0.6
+    expo-device: ^5.2.1
     expo-font: ~11.1.1
     expo-linking: ~4.0.1
     expo-localization: ^14.1.1
@@ -14032,6 +14044,13 @@ __metadata:
   version: 0.7.34
   resolution: "ua-parser-js@npm:0.7.34"
   checksum: ddb7b8b590af49f37eaac37579ac98274f59fff3990610f45e33893aa62ce5b8fc265459cb78b9c9fa3fbbbaad5b2d7939303f18cbd7e8c25c96e57009443c42
+  languageName: node
+  linkType: hard
+
+"ua-parser-js@npm:^0.7.33":
+  version: 0.7.35
+  resolution: "ua-parser-js@npm:0.7.35"
+  checksum: 0a332e8d72d277e62f29ecb3a33843b274de93eb9378350b746ea0f89ef05ee09c94f2c1fdab8001373ad5e95a48beb0a94f39dc1670c908db9fc9b8f0876204
   languageName: node
   linkType: hard
 

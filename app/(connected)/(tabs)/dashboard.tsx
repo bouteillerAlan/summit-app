@@ -1,9 +1,9 @@
 import React, { type ReactElement, useState } from 'react';
-import RowCalendar from '../../../components/row-calendar';
+import RowCalendar from '../../../components/rowCalendar';
 import { type dayData } from '../../../types/interfaces';
-import { View, Text } from 'native-base';
 import { DateTime } from 'luxon';
 import SafeView from '../../../components/safeView';
+import WorkoutList from '../../../components/workoutList';
 
 const Dashboard = (): ReactElement => {
   // first load is today
@@ -12,11 +12,7 @@ const Dashboard = (): ReactElement => {
   return (
     <SafeView>
       <RowCalendar readUserPressedDate={(pressedDate: dayData): void => { setPressedDate(pressedDate); }}/>
-      <View>
-        <Text>
-          {JSON.stringify(pressedDate)}
-        </Text>
-      </View>
+      <WorkoutList dayData={pressedDate}/>
     </SafeView>
   );
 };

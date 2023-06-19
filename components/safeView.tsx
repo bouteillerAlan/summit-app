@@ -1,6 +1,8 @@
 import React, { type ReactElement, type ReactNode } from 'react';
 import { SafeAreaView } from 'react-native';
 import Constants from 'expo-constants';
+import * as Device from 'expo-device';
+import { View } from 'native-base';
 
 /**
  * custom safeAreaView working on android and ios
@@ -11,11 +13,18 @@ import Constants from 'expo-constants';
  */
 const SafeView = (props: { children: ReactNode }): ReactElement => {
   const STATUSBAR_HEIGHT: number = Constants.statusBarHeight;
+  const isIos: boolean = Device.brand === 'Apple';
+
+  if (isIos) {
+    return (
+      <SafeAreaView>{props.children}</SafeAreaView>
+    );
+  }
 
   return (
-    <SafeAreaView style={{ paddingTop: STATUSBAR_HEIGHT }}>
+    <View style={{ paddingTop: STATUSBAR_HEIGHT }}>
       {props.children}
-    </SafeAreaView>
+    </View>
   );
 };
 

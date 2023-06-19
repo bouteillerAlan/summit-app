@@ -9,12 +9,13 @@ const Layout = (): ReactElement => {
   return (
     <Tabs screenOptions={{
       headerShown: true,
-      tabBarShowLabel: false,
+      tabBarShowLabel: true,
       tabBarActiveTintColor: '#000'
     }}>
       <Tabs.Screen
         name='dashboard'
         options={{
+          tabBarStyle: { height: 50 },
           headerShown: false,
           tabBarIcon: (stg: tabBarIconProps) => <FontAwesome5 name='dumbbell' color={stg.color} size={iconSize}/>
         }}

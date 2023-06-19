@@ -49,3 +49,5 @@ export interface RowCalendarProps {
 }
 
 export interface tabBarIconProps { focused: boolean, color: string, size: number }
+
+export interface workoutListProps { dayData: dayData }
