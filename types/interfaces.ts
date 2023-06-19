@@ -43,3 +43,9 @@ export interface pressedDayCoordinate {
   weekIndex: number
   dayIndex: number
 }
+
+export interface RowCalendarProps {
+  readUserPressedDate: (dayData: dayData) => void
+}
+
+export interface tabBarIconProps { focused: boolean, color: string, size: number }

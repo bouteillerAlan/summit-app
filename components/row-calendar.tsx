@@ -12,10 +12,18 @@ import {
   type NativeSyntheticEvent,
   type ScaledSize
 } from 'react-native';
-import type { calendarData, dayData, weekData, onViewableItemsChangedInfo, pressedDayCoordinate } from '../types/interfaces';
+import type {
+  calendarData,
+  dayData,
+  weekData,
+  onViewableItemsChangedInfo,
+  pressedDayCoordinate,
+  RowCalendarProps
+} from '../types/interfaces';
 import { FontAwesome5 } from '@expo/vector-icons';
+import SafeView from './safeView';
 
-const RowCalendar = (): ReactElement => {
+const RowCalendar = (props: RowCalendarProps): ReactElement => {
   const windowDimensions: ScaledSize = Dimensions.get('window');
   const dayItemWidth = useRef<number>(0);
   const dateFlatList = useRef();
@@ -105,7 +113,7 @@ const RowCalendar = (): ReactElement => {
   }
 
   /**
-   * PURELY ESTHETICS - clean and set the calendar data in function of the user press action on a day
+   * clean and set the calendar data in function of the user press action on a day and pass to it the props
    * @param {dayData} pressedDayData pressed date and data
    * @param {number} pressedDayIndex the pressed day index
    * @param {ListRenderItemInfo<weekData>} pressedWeekData pressed week and react data
@@ -120,6 +128,7 @@ const RowCalendar = (): ReactElement => {
       // set the current "pressed" day
       setPressedDayCoordinate({ weekIndex: pressedWeekData.index, dayIndex: pressedDayIndex });
       setDateData(tempArray);
+      props.readUserPressedDate(pressedDayData);
     }
   }
 

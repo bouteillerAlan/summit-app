@@ -1,8 +1,7 @@
 import { Tabs } from 'expo-router';
 import React, { type ReactElement } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
-
-interface tabBarIconProps { focused: boolean, color: string, size: number }
+import type { tabBarIconProps } from '../../types/interfaces';
 
 const Layout = (): ReactElement => {
   const iconSize = 20;
@@ -16,13 +15,14 @@ const Layout = (): ReactElement => {
       <Tabs.Screen
         name='dashboard'
         options={{
-          tabBarIcon: (stg: tabBarIconProps) => <FontAwesome5 name='chart-line' color={stg.color} size={iconSize}/>
+          headerShown: false,
+          tabBarIcon: (stg: tabBarIconProps) => <FontAwesome5 name='dumbbell' color={stg.color} size={iconSize}/>
         }}
       />
       <Tabs.Screen
         name='workouts/list'
         options={{
-          tabBarIcon: (stg: tabBarIconProps) => <FontAwesome5 name='dumbbell' color={stg.color} size={iconSize}/>
+          tabBarIcon: (stg: tabBarIconProps) => <FontAwesome5 name='chart-line' color={stg.color} size={iconSize}/>
         }}
       />
       <Tabs.Screen
