@@ -2,7 +2,7 @@
 // if done optimize dateIsPressed and the flatList scroll
 
 import React, { Fragment, type ReactElement, useEffect, useRef, useState } from 'react';
-import { Box, Button, Center, FlatList, HStack, Icon, Pressable, Text } from 'native-base';
+import { Box, Button, Center, FlatList, HStack, Icon, Pressable, Text, View } from 'native-base';
 import DateServ from '../services/date';
 import { DateTime, type PossibleDaysInMonth } from 'luxon';
 import {
@@ -21,7 +21,6 @@ import type {
   RowCalendarProps
 } from '../types/interfaces';
 import { FontAwesome5 } from '@expo/vector-icons';
-import SafeView from './safeView';
 
 const RowCalendar = (props: RowCalendarProps): ReactElement => {
   const windowDimensions: ScaledSize = Dimensions.get('window');
@@ -275,7 +274,7 @@ const RowCalendar = (props: RowCalendarProps): ReactElement => {
   }
 
   return (
-    <Box>
+    <View>
       <HStack alignItems={'center'} justifyContent={'space-between'} m={1}>
         <HStack alignItems={'center'}>
           <Button
@@ -332,7 +331,7 @@ const RowCalendar = (props: RowCalendarProps): ReactElement => {
         viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
         onViewableItemsChanged={onViewableItemsChanged.current}
       />}
-    </Box>
+    </View>
   );
 };
 
