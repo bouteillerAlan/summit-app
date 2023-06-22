@@ -23,31 +23,26 @@ function validateUser(): void {
   const segments: string[] = useSegments();
 
   React.useEffect((): void => {
-    // todo - delete me after dev
-    if ((segments.length > 0 && segments[0] === '/') || segments.length === 0) {
-      router.replace('/(connected)/dashboard');
-    }
-
-    // // validate the user via the user/me endpoint
-    // Api.getInstance().getUser()
-    //   .then(() => {
-    //     // the token is valid and the user is on login page
-    //     if (segments.length > 0 && segments[0] === '/') {
-    //       router.replace('/(connected)/dashboard');
-    //     }
-    //     // else do nothing :) the user have the right to be there
-    //   })
-    //   .catch(() => {
-    //     // the token is not valid redirect the user to the login page
-    //     // delete the token
-    //     Storage.getInstance().remove('token')
-    //       .then((): void => {})
-    //       .catch((): void => {})
-    //       .finally(() => {
-    //         // in all case we want to redirect the user
-    //         router.replace('/');
-    //       });
-    //   });
+    // validate the user via the user/me endpoint
+    Api.getInstance().getUser()
+      .then(() => {
+        // the token is valid and the user is on login page
+        if (segments.length > 0 && segments[0] === '/') {
+          router.replace('/(connected)/dashboard');
+        }
+        // else do nothing :) the user have the right to be there
+      })
+      .catch(() => {
+        // the token is not valid redirect the user to the login page
+        // delete the token
+        Storage.getInstance().remove('token')
+          .then((): void => {})
+          .catch((): void => {})
+          .finally(() => {
+            // in all case we want to redirect the user
+            router.replace('/');
+          });
+      });
   }, [segments]);
 }
 
