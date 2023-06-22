@@ -1,7 +1,13 @@
 import { type DateTime } from 'luxon';
 import { type ViewToken } from 'react-native';
+import { type feelingEnum, type perceivedExertionEnum } from './enum';
 
 export type Token = string | undefined;
+
+export interface AxsCallError {
+  message: string
+  inError: boolean
+}
 
 export interface FormError {
   formError: string
@@ -51,3 +57,27 @@ export interface RowCalendarProps {
 export interface tabBarIconProps { focused: boolean, color: string, size: number }
 
 export interface workoutListProps { dayData: dayData }
+
+export interface workout {
+  owner: number
+  trainingType: number
+  name: string
+  date: string
+  plannedDistance?: number
+  plannedDuration?: number
+  plannedPace?: number
+  plannedCalorie?: number
+  distance?: number
+  duration?: number
+  pace?: number
+  calorie?: number
+  note?: string
+  postActivityNote?: string
+  perceivedExertion?: perceivedExertionEnum
+  feeling?: feelingEnum
+}
+
+export interface ErrorMessageProps {
+  condition: boolean
+  text: string
+}
