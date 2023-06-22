@@ -42,13 +42,13 @@ export default class Storage {
   /**
    * get the value for a key in the secure storage
    * @param {string} key name of the key for the value you want to access
-   * @returns {Promise<string | undefined>} the value or undefined
+   * @returns {Promise<string>} the value or the string 'undefined'
    */
-  public async get(key: string): Promise<string | undefined> {
+  public async get(key: string): Promise<string> {
     const result = this.isWeb()
       ? await AsyncStorage.getItem(key)
       : await SecureStore.getItemAsync(key);
-    return result === null ? undefined : result;
+    return result === null ? 'undefined' : result;
   }
 
   /**

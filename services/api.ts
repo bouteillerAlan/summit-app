@@ -1,4 +1,6 @@
 import axios, { type AxiosInstance, type AxiosResponse } from 'axios';
+import Storage from './storage';
+import { type DateTime } from 'luxon';
 
 /**
  * handle all the call and the response between the app and the api
@@ -14,10 +16,13 @@ export default class Api {
      * @type {axios.AxiosInstance}
      */
     this.axs = axios.create({
-      baseURL: 'http://localhost:3000',
+      baseURL: 'http://192.168.1.103:3000',
       timeout: 5000,
       maxRedirects: 0,
-      headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
     });
   }
 
@@ -31,6 +36,17 @@ export default class Api {
   }
 
   /**
+   * get the token
+   * @returns {string} the token or the 'undefined' value if no value is given
+   * @private
+   */
+  private async getToken(): Promise<string> {
+    return Storage.getInstance().get('token')
+      .then((token: string) => token)
+      .catch((): string => 'error');
+  }
+
+  /**
    * HTTP POST on /auth/login
    * @param {string} email email for the login attempt
    * @param {string} password password for the login attempt
@@ -41,6 +57,37 @@ export default class Api {
       '/auth/login',
       { email, password },
       { validateStatus: status => status === 201 }
+    );
+  }
+
+  /**
+   * HTTP GET on /user/me
+   * @returns {Response} HTTP response or error
+   */
+  public async getUser(): Promise<AxiosResponse> {
+    const token = await this.getToken();
+    return this.axs.get(
+      '/user/me',
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        validateStatus: status => status === 200
+      }
+    );
+  }
+
+  /**
+   * HTTP GET on /training/{date}
+   * @param {DateTime} date the day for the workout you want to fetch
+   * @returns {Response} HTTP response or error
+   */
+  public async getDayWorkout(date: DateTime): Promise<AxiosResponse> {
+    const token: string = await this.getToken();
+    return this.axs.get(
+      `/training/d/${date.toString()}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        validateStatus: status => status === 200
+      }
     );
   }
 }

@@ -1,6 +1,26 @@
 {
   "name": "summit-app",
   "version": "1.0.0",
+  "description": "Mobile summit app",
+  "author": {
+    "name": "Alan <A2N> Bouteiller",
+    "email": "a2n.dev@pm.me",
+    "url": "https://github.com/bouteillerAlan"
+  },
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/bouteillerAlan/summit-app",
+  "bugs": {
+    "url": "https://github.com/bouteillerAlan/summit-app/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bouteillerAlan/summit-app.git"
+  },
+  "packageManager": "yarn@3.6.0",
+  "engines": {
+    "node": ">=18.16.0",
+    "yarn": ">=3.6.0"
+  },
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -17,31 +37,35 @@
     "@react-navigation/native": "^6.0.2",
     "axios": "^1.4.0",
     "expo": "~48.0.6",
+    "expo-device": "^5.2.1",
     "expo-font": "~11.1.1",
     "expo-linking": "~4.0.1",
-    "expo-router": "^1.0.0-rc5",
+    "expo-localization": "^14.1.1",
+    "expo-router": "^1.5.3",
     "expo-secure-store": "^12.1.1",
     "expo-splash-screen": "~0.18.1",
     "expo-status-bar": "~1.4.4",
     "expo-system-ui": "~2.2.1",
     "expo-web-browser": "~12.1.1",
+    "luxon": "^3.3.0",
     "native-base": "^3.4.28",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.71.3",
+    "react-native": "0.71.6",
     "react-native-logs": "^5.0.1",
     "react-native-safe-area-context": "^4.5.0",
     "react-native-screens": "~3.20.0",
-    "react-native-svg": "13.9.0",
-    "react-native-web": "~0.19.4"
+    "react-native-svg": "13.4.0",
+    "react-native-web": "0.18.10"
   },
   "devDependencies": {
+    "@types/luxon": "^3.3.0",
     "@babel/core": "^7.21.8",
     "@types/axios": "^0.14.0",
     "@types/react": "~18.0.38",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
     "eslint": "^8.35.0",
-    "eslint-config-standard-with-typescript": "^34.0.0",
+    "eslint-config-standard-with-typescript": "^34.0.1",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsdoc": "^44.2.4",
     "eslint-plugin-n": "^15.6.1",
@@ -50,6 +74,5 @@
     "jest-expo": "~48.0.0",
     "react-test-renderer": "18.2.0",
     "typescript": "^5.0.4"
-  },
-  "private": true
+  }
 }

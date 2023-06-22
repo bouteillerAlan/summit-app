@@ -1,37 +1,23 @@
-import { type ReactElement, useState } from 'react';
+import React, { type ReactElement, useState } from 'react';
 import { Center, FormControl, Icon, Input, Pressable, VStack, WarningOutlineIcon } from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Api from '../services/api';
 import { SubmitButton } from '../components/button';
 import { type AxiosResponse } from 'axios';
+import { useAuth } from '../services/auth';
+import { type AuthCtx, type LoginForm } from '../types/interfaces';
+import { FormDataValidation } from '../types/enum';
 
-interface FormError {
-  formError: string
-}
-
-interface InputState {
-  value: string
-  onError?: boolean
-  errorMessage?: string
-}
-
-interface LoginForm extends FormError {
-  email: InputState
-  password: InputState
-}
-
-enum FormDataValidation {
-  'notEmpty' = 'notEmpty',
-  'isEmail' = 'isEmail'
-}
-
-const Login = (): ReactElement => {
+const Index = (): ReactElement => {
   const [show, setShow] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
   const [formData, setFormData] = useState<LoginForm>(
-    { password: { value: '' }, email: { value: '' }, formError: '' }
+    { password: { value: '', onError: false }, email: { value: '', onError: false }, formError: '' }
   );
+
+  const auth: AuthCtx | null = useAuth();
 
   /**
    * handle the data assignation and the data check for the form
@@ -41,6 +27,7 @@ const Login = (): ReactElement => {
    * todo - setup a service for that or something like that
    */
   function handleFormData(index: Exclude<keyof LoginForm, 'formError'>, value: string, validation?: FormDataValidation[] | undefined): void {
+    setError(false);
     const currentFormData = formData;
     currentFormData[index].value = value;
 
@@ -66,26 +53,40 @@ const Login = (): ReactElement => {
   }
 
   /**
+   * set state to trigger "unexpected error"
+   * @returns {void}
+   */
+  function castUnexpectedError(): void {
+    setError(true);
+    setSuccess(false);
+    setFormData({ ...formData, formError: 'something unexpected happened !' });
+  }
+
+  /**
    * try a login for the current data
    * @returns {void}
    */
   function login(): void {
     setLoading(true);
     Api.getInstance().login(formData.email.value, formData.password.value)
-      .then((response: AxiosResponse) => {
-        /* store the token and redirect the user */
-        // console.log('yyyy', response);
+      .then((response: AxiosResponse): void => {
+        if (response.data?.access_token !== undefined && auth !== null) {
+          setSuccess(true);
+          auth.signIn(response.data.access_token, castUnexpectedError);
+        } else {
+          castUnexpectedError();
+        }
       })
-      .catch((response) => {
+      .catch((reason): void => {
         setError(true);
-        // console.log('xxxx', response);
+        setFormData({ ...formData, formError: 'check your credential' });
       })
       .finally(() => { setLoading(false); });
   }
 
   return (
     <Center flex={1} px='10'>
-      <VStack space={4} alignItems='center'>
+      <VStack w={'xs'} space={4} alignItems='center'>
         <FormControl isInvalid={formData.email.onError}>
           <Input
             type='text'
@@ -116,7 +117,7 @@ const Login = (): ReactElement => {
           </FormControl.ErrorMessage>
         </FormControl>
         <FormControl isInvalid={error}>
-          <SubmitButton text={'Login'} loading={loading} onPress={login} disabled={error} error={error}/>
+          <SubmitButton text={'Login'} loading={loading} onPress={login} disabled={error} error={error} success={success}/>
           <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs"/>}>
             {formData.formError}
           </FormControl.ErrorMessage>
@@ -126,4 +127,4 @@ const Login = (): ReactElement => {
   );
 };
 
-export default Login;
+export default Index;
