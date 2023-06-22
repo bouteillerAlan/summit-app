@@ -77,7 +77,7 @@ const Index = (): ReactElement => {
           castUnexpectedError();
         }
       })
-      .catch((reason): void => {
+      .catch((): void => {
         setError(true);
         setFormData({ ...formData, formError: 'check your credential' });
       })
