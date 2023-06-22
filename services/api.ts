@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance, type AxiosResponse } from 'axios';
 import Storage from './storage';
+import { type DateTime } from 'luxon';
 
 /**
  * handle all the call and the response between the app and the api
@@ -15,7 +16,7 @@ export default class Api {
      * @type {axios.AxiosInstance}
      */
     this.axs = axios.create({
-      baseURL: 'http://192.168.1.148:3000',
+      baseURL: 'http://192.168.1.103:3000',
       timeout: 5000,
       maxRedirects: 0,
       headers: {
@@ -67,6 +68,22 @@ export default class Api {
     const token = await this.getToken();
     return this.axs.get(
       '/user/me',
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        validateStatus: status => status === 200
+      }
+    );
+  }
+
+  /**
+   * HTTP GET on /training/{date}
+   * @param {DateTime} date the day for the workout you want to fetch
+   * @returns {Response} HTTP response or error
+   */
+  public async getDayWorkout(date: DateTime): Promise<AxiosResponse> {
+    const token: string = await this.getToken();
+    return this.axs.get(
+      `/training/d/${date.toString()}`,
       {
         headers: { Authorization: `Bearer ${token}` },
         validateStatus: status => status === 200
