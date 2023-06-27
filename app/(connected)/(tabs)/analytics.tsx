@@ -1,8 +1,9 @@
 import React, { type ReactElement } from 'react';
-import { View, Text } from 'native-base';
+import { Text } from 'native-base';
+import SafeView from '../../../components/safeView';
 
 const Analytics = (): ReactElement => {
-  return <View><Text>Analytics</Text></View>;
+  return <SafeView><Text>Analytics</Text></SafeView>;
 };
 
 export default Analytics;
