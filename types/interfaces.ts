@@ -58,9 +58,21 @@ export interface tabBarIconProps { focused: boolean, color: string, size: number
 
 export interface workoutListProps { dayData: dayData }
 
+export interface workoutCardProps {
+  workout: workout
+}
+
+export interface trainingType {
+  id: number
+  name: string
+  icon: string
+  code: string
+}
+
 export interface workout {
+  id: number
   owner: number
-  trainingType: number
+  trainingType: trainingType
   name: string
   date: string
   plannedDistance?: number
@@ -81,3 +93,5 @@ export interface ErrorMessageProps {
   condition: boolean
   text: string
 }
+
+export interface NoDataMessageProps extends ErrorMessageProps {}
