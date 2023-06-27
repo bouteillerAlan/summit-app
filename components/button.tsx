@@ -45,7 +45,7 @@ export function SubmitButton(props: SubmitButtonProps): ReactElement {
     backgroundColor={color}
     leftIcon={
       <Icon
-        size={5} mr='2' color='muted.400'
+        size={5} mr='2' color='white'
         as={icon}
       />
     }
