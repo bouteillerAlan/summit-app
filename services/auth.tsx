@@ -23,26 +23,22 @@ function validateUser(): void {
   const segments: string[] = useSegments();
 
   React.useEffect((): void => {
-    // validate the user via the user/me endpoint
-    Api.getInstance().getUser()
-      .then(() => {
-        // the token is valid and the user is on login page
-        if (segments.length > 0 && segments[0] === '/') {
-          router.replace('/(connected)/dashboard');
-        }
-        // else do nothing :) the user have the right to be there
-      })
-      .catch(() => {
-        // the token is not valid redirect the user to the login page
-        // delete the token
-        Storage.getInstance().remove('token')
-          .then((): void => {})
-          .catch((): void => {})
-          .finally(() => {
-            // in all case we want to redirect the user
-            router.replace('/');
-          });
-      });
+    // if the user is not in the login page we need to check this right
+    if (segments.length > 0 && segments[0] !== '/') {
+      // validate the user via the user/me endpoint
+      Api.getInstance().getUser()
+        .then((): void => {}) // the token is valid so do nothing :) the user have the right to be there
+        .catch((): void => { // the token is not valid redirect the user to the login page
+          // delete the token
+          Storage.getInstance().remove('token')
+            .then((): void => {})
+            .catch((): void => {})
+            .finally(() => {
+              // in all case we want to redirect the user
+              router.replace('/');
+            });
+        });
+    }
   }, [segments]);
 }
 
