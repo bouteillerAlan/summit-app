@@ -1,8 +1,9 @@
 import React, { type ReactElement } from 'react';
-import { View, Text } from 'native-base';
+import { Text } from 'native-base';
+import SafeView from '../../../components/safeView';
 
 const Settings = (): ReactElement => {
-  return <View><Text>Settings</Text></View>;
+  return <SafeView><Text>Settings</Text></SafeView>;
 };
 
 export default Settings;
