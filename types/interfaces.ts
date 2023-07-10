@@ -1,6 +1,7 @@
 import { type DateTime } from 'luxon';
 import { type ViewToken } from 'react-native';
-import { type feelingEnum, type perceivedExertionEnum } from './enum';
+import { type feelingEnum, type FormDataValidation, type perceivedExertionEnum } from './enum';
+import { type ReactElement } from 'react';
 
 export type Token = string | undefined;
 
@@ -13,20 +14,39 @@ export interface FormError {
   formError: string
 }
 
-export interface InputState {
-  value: string
+export interface InputState<T> {
+  value: T
   onError: boolean
+  validation: FormDataValidation[] | undefined
   errorMessage?: string
 }
 
 export interface LoginForm extends FormError {
-  email: InputState
-  password: InputState
+  email: InputState<string>
+  password: InputState<string>
 }
 
 export interface AuthCtx {
   signIn: (token: string, callbackError: () => void) => void
   signOut: (callbackError: () => void) => void
+}
+
+export interface WorkoutForm extends FormError {
+  trainingType: InputState<trainingType>
+  name: InputState<string>
+  date: InputState<string>
+  plannedDistance?: InputState<number>
+  plannedDuration?: InputState<number>
+  plannedPace?: InputState<number>
+  plannedCalorie?: InputState<number>
+  distance?: InputState<number>
+  duration?: InputState<number>
+  pace?: InputState<number>
+  calorie?: InputState<number>
+  note?: InputState<string>
+  postActivityNote?: InputState<string>
+  perceivedExertion?: InputState<perceivedExertionEnum>
+  feeling?: InputState<feelingEnum>
 }
 
 export interface dayData {
@@ -95,3 +115,34 @@ export interface ErrorMessageProps {
 }
 
 export interface NoDataMessageProps extends ErrorMessageProps {}
+
+export interface FormInputProps {
+  type: 'text' | 'password'
+  isInvalid: boolean
+  errorText: string | undefined
+  InputLeftElement?: ReactElement | ReactElement[] | undefined
+  InputRightElement?: ReactElement | ReactElement[] | undefined
+  placeholder: string
+  value: string | undefined
+  onChangeText: (value: string) => void
+  secureTextEntry?: boolean
+  id?: string
+}
+
+export interface SubmitButtonProps {
+  isInvalid: boolean
+  isSucceed: boolean
+  errorText: string | undefined
+  loading: boolean
+  onPress: () => void
+  text: string
+}
+
+export interface CustomButtonProps {
+  text: string
+  loading: boolean
+  disabled: boolean
+  error: boolean
+  success: boolean
+  onPress: () => void
+}
