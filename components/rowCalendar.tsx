@@ -53,6 +53,8 @@ const RowCalendar = (props: RowCalendarProps): ReactElement => {
     if (dateData !== undefined) {
       setCurrentWeekIndex(getTodayData(dateData).weekIndex);
       setToday(getTodayData(dateData).date);
+      // define a default date for this action
+      setPressedDayData(getTodayData(dateData).date);
     }
   }, [dateData]);
 
