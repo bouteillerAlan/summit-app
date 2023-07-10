@@ -35,6 +35,7 @@ const RowCalendar = (props: RowCalendarProps): ReactElement => {
   const [currentObjectInfo, setCurrentObjectInfo] = useState<onViewableItemsChangedInfo | undefined>(undefined);
   const [flatListRefreshing, setFlatListRefreshing] = useState<boolean>(false);
   const [pressedDayCoordinate, setPressedDayCoordinate] = useState<pressedDayCoordinate>({ weekIndex: 0, dayIndex: 0 });
+  const [pressedDayData, setPressedDayData] = useState<dayData | undefined>(undefined);
 
   /**
    * calculate the item dimension for one day, we want the total width split by seven day
@@ -115,11 +116,11 @@ const RowCalendar = (props: RowCalendarProps): ReactElement => {
 
   /**
    * clean and set the calendar data in function of the user press action on a day and pass to it the props
-   * @param {dayData} pressedDayData pressed date and data
+   * @param {dayData} pressedDay pressed date and data
    * @param {number} pressedDayIndex the pressed day index
    * @param {ListRenderItemInfo<weekData>} pressedWeekData pressed week and react data
    */
-  function dateIsPressed(pressedDayData: dayData, pressedDayIndex: number, pressedWeekData: ListRenderItemInfo<weekData>): void {
+  function dateIsPressed(pressedDay: dayData, pressedDayIndex: number, pressedWeekData: ListRenderItemInfo<weekData>): void {
     if (dateData !== undefined) {
       const tempArray: calendarData = [...dateData];
       // clean the old "pressed" day
@@ -129,7 +130,8 @@ const RowCalendar = (props: RowCalendarProps): ReactElement => {
       // set the current "pressed" day
       setPressedDayCoordinate({ weekIndex: pressedWeekData.index, dayIndex: pressedDayIndex });
       setDateData(tempArray);
-      props.readUserPressedDate(pressedDayData);
+      props.readUserPressedDate(pressedDay);
+      setPressedDayData(pressedDay);
     }
   }
 
@@ -275,6 +277,13 @@ const RowCalendar = (props: RowCalendarProps): ReactElement => {
     setFlatListRefreshing(false);
   }
 
+  /**
+   * move the user to the createWorkout page with the pressed date data
+   */
+  function addWorkoutAction(): void {
+    router.push(`(stack)/createWorkout?d=${JSON.stringify(pressedDayData)}`);
+  }
+
   return (
     <View>
       <HStack alignItems={'center'} justifyContent={'space-between'} m={1}>
@@ -300,7 +309,7 @@ const RowCalendar = (props: RowCalendarProps): ReactElement => {
           variant={'ghost'}
           w={10}
           _text={{ color: 'black' }}
-          onPress={() => { router.push('(stack)/createWorkout'); }}
+          onPress={() => { addWorkoutAction(); }}
           startIcon={<Icon as={<FontAwesome5 name='plus'/>} size={'sm'} color={'black'}/>}
         />
       </HStack>
