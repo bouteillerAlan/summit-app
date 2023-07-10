@@ -1,22 +1,14 @@
 import React, { type ReactElement } from 'react';
 import { Button, Icon } from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
-
-export interface SubmitButtonProps {
-  text: string
-  loading: boolean
-  disabled: boolean
-  error: boolean
-  success: boolean
-  onPress: () => void
-}
+import { type CustomButtonProps } from '../types/interfaces';
 
 /**
  * render a custom button component
- * @param {SubmitButtonProps} props settings for the button { text, loading, disabled, onPress }
+ * @param {CustomButtonProps} props settings for the button { text, loading, disabled, onPress }
  * @returns {ReactElement} the custom button
  */
-export function SubmitButton(props: SubmitButtonProps): ReactElement {
+const CustomButton = (props: CustomButtonProps): ReactElement => {
   let icon = <FontAwesome5 name='unlock-alt'/>;
   let color = 'black';
 
@@ -52,4 +44,6 @@ export function SubmitButton(props: SubmitButtonProps): ReactElement {
   >
     {props.text}
   </Button>;
-}
+};
+
+export default CustomButton;
