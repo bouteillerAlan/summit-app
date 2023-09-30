@@ -43,7 +43,10 @@ const RowCalendar = (props: RowCalendarProps): ReactElement => {
    */
   useEffect((): void => {
     dayItemWidth.current = windowDimensions.width / 7;
-    setDateData(getCurrentMonth());
+    const currentMonth = getCurrentMonth();
+    setDateData(currentMonth);
+    // define a default date for this action
+    setPressedDayData(getTodayData(currentMonth).date);
   }, []);
 
   /**
@@ -53,8 +56,6 @@ const RowCalendar = (props: RowCalendarProps): ReactElement => {
     if (dateData !== undefined) {
       setCurrentWeekIndex(getTodayData(dateData).weekIndex);
       setToday(getTodayData(dateData).date);
-      // define a default date for this action
-      setPressedDayData(getTodayData(dateData).date);
     }
   }, [dateData]);
 
