@@ -12,6 +12,8 @@ const FormInput = (props: FormInputProps): ReactElement => {
         placeholder={props.placeholder}
         value={props.value}
         onChangeText={props.onChangeText}
+        onPressIn={props.onPressIn}
+        isReadOnly={props.isReadOnly}
       />
       <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs"/>} children={props.errorText}/>
     </FormControl>
