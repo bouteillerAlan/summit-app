@@ -2177,6 +2177,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/config-plugins@npm:~7.8.2":
+  version: 7.8.4
+  resolution: "@expo/config-plugins@npm:7.8.4"
+  dependencies:
+    "@expo/config-types": ^50.0.0-alpha.1
+    "@expo/fingerprint": ^0.6.0
+    "@expo/json-file": ~8.3.0
+    "@expo/plist": ^0.1.0
+    "@expo/sdk-runtime-versions": ^1.0.0
+    "@react-native/normalize-color": ^2.0.0
+    chalk: ^4.1.2
+    debug: ^4.3.1
+    find-up: ~5.0.0
+    getenv: ^1.0.0
+    glob: 7.1.6
+    resolve-from: ^5.0.0
+    semver: ^7.5.3
+    slash: ^3.0.0
+    slugify: ^1.6.6
+    xcode: ^3.0.1
+    xml2js: 0.6.0
+  checksum: 1cbacd9742e00dace8abb1a34f2a5b2140d16a81e2fffb18beb796b0e310524e8fab121f8f82a85593d3e5c65b48e227a062eb65a8889a8437c39094883f0e89
+  languageName: node
+  linkType: hard
+
 "@expo/config-types@npm:^48.0.0":
   version: 48.0.0
   resolution: "@expo/config-types@npm:48.0.0"
@@ -2188,6 +2213,13 @@ __metadata:
   version: 49.0.0
   resolution: "@expo/config-types@npm:49.0.0"
   checksum: 5ce8e678495e2e4568f6b502e7f2ef8afd6a8962b28d8e17316249be82321dc5ec5061f8fc467c90d85e330fd3565823cfdc10bab4a78e6b1765296101c8d71d
+  languageName: node
+  linkType: hard
+
+"@expo/config-types@npm:^50.0.0, @expo/config-types@npm:^50.0.0-alpha.1":
+  version: 50.0.0
+  resolution: "@expo/config-types@npm:50.0.0"
+  checksum: 8cf3a128ceb41062a94d164e367d36e0e50fb78140f5f6d10233a4fe3bdb79d3e58390e0b099d8066b65e4334292f0c9cf7896c80b347fc9928f27648294c048
   languageName: node
   linkType: hard
 
@@ -2245,6 +2277,25 @@ __metadata:
     slugify: ^1.3.4
     sucrase: ^3.20.0
   checksum: 6a8f17e306c94335373c74030e799db15c469d61aa2ae4a393fceef254e5e003ea30416428acb7e9adb81d7b261539e391ab11bd802759c8a79c5ecc5c3c2f59
+  languageName: node
+  linkType: hard
+
+"@expo/config@npm:~8.5.0":
+  version: 8.5.4
+  resolution: "@expo/config@npm:8.5.4"
+  dependencies:
+    "@babel/code-frame": ~7.10.4
+    "@expo/config-plugins": ~7.8.2
+    "@expo/config-types": ^50.0.0
+    "@expo/json-file": ^8.2.37
+    getenv: ^1.0.0
+    glob: 7.1.6
+    require-from-string: ^2.0.2
+    resolve-from: ^5.0.0
+    semver: 7.5.3
+    slugify: ^1.3.4
+    sucrase: 3.34.0
+  checksum: c7bfd2d7a391cc37487ca5e9a401b7a0cdf37ab9ee9da071feda569cf5035cb877f085d0e802ea5e4cc83794fd68254d5e865be0d544af03875ee2e71a81a210
   languageName: node
   linkType: hard
 
@@ -2324,6 +2375,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/fingerprint@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "@expo/fingerprint@npm:0.6.0"
+  dependencies:
+    "@expo/spawn-async": ^1.5.0
+    chalk: ^4.1.2
+    debug: ^4.3.4
+    find-up: ^5.0.0
+    minimatch: ^3.0.4
+    p-limit: ^3.1.0
+    resolve-from: ^5.0.0
+  bin:
+    fingerprint: bin/cli.js
+  checksum: 3bf009462d30269c4682bcdfd17e150acb87bc92aa7616afb10475be681a390420f743367614402d3907862c0c7a1cf6cc21f6e8b0b0e9c6f859fd17b9108b28
+  languageName: node
+  linkType: hard
+
 "@expo/image-utils@npm:0.3.22":
   version: 0.3.22
   resolution: "@expo/image-utils@npm:0.3.22"
@@ -2351,6 +2419,17 @@ __metadata:
     json5: ^2.2.2
     write-file-atomic: ^2.3.0
   checksum: f04e71654c5b3491bbb7088a02d64acf8e7750369fd48f4d55c64ff4372b5396bdef05a8eff51955e0b098e0069e63281f3c40dc6d3b71aec62295861b1236a6
+  languageName: node
+  linkType: hard
+
+"@expo/json-file@npm:~8.3.0":
+  version: 8.3.0
+  resolution: "@expo/json-file@npm:8.3.0"
+  dependencies:
+    "@babel/code-frame": ~7.10.4
+    json5: ^2.2.2
+    write-file-atomic: ^2.3.0
+  checksum: 708d6bc105296ce260aedb85c48f311b96e387895983e46791913729d1b4cab00429be5ea76eb97f4345c7405db0e7e8a3eff8082d6671dfc312f767c61db7e3
   languageName: node
   linkType: hard
 
@@ -2423,6 +2502,17 @@ __metadata:
     base64-js: ^1.2.3
     xmlbuilder: ^14.0.0
   checksum: 74dea791f86ca29541e94c00d7e0d044b1ccb7947a6f62b18569a85baa4572190c0cbd0973bf97eec9b5f207f45ebb55b8975bd200e5933b237e4d2d2dc12194
+  languageName: node
+  linkType: hard
+
+"@expo/plist@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@expo/plist@npm:0.1.0"
+  dependencies:
+    "@xmldom/xmldom": ~0.7.7
+    base64-js: ^1.2.3
+    xmlbuilder: ^14.0.0
+  checksum: 49b647c4858d9669126ccc26ab09d8e93c38c3add1ed6944532dd0513671bd36b2ea6484f988087622e12c5513e9d3a5b3a5d0361abf701616f377b5bde97294
   languageName: node
   linkType: hard
 
@@ -9922,23 +10012,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-expo@npm:~48.0.0":
-  version: 48.0.2
-  resolution: "jest-expo@npm:48.0.2"
+"jest-expo@npm:~50.0.4":
+  version: 50.0.4
+  resolution: "jest-expo@npm:50.0.4"
   dependencies:
-    "@expo/config": ~8.0.0
+    "@expo/config": ~8.5.0
+    "@expo/json-file": ^8.2.37
     "@jest/create-cache-key-function": ^29.2.1
     babel-jest: ^29.2.1
     find-up: ^5.0.0
     jest-environment-jsdom: ^29.2.1
     jest-watch-select-projects: ^2.0.0
     jest-watch-typeahead: 2.2.1
-    json5: ^2.1.0
+    json5: ^2.2.3
     lodash: ^4.17.19
     react-test-renderer: 18.2.0
+    stacktrace-js: ^2.0.2
   bin:
     jest: bin/jest.js
-  checksum: 72e4e324b6a95b24e672785b40147aafd2e183d49f81de877fd3d6ba594642c49b801108da69f97eeddc1354f2339e32b7cdc925c804b05fde695ea6a9e44d97
+  checksum: 8c352d8ec813c4cf293bd7b0d224352cb75a32210efb85da92e66d90bdadeb1d0dad351731af956a3310ef36eec325d5381ddd7194c301c865e2005bd34bbf2b
   languageName: node
   linkType: hard
 
@@ -10552,7 +10644,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json5@npm:^2.1.0, json5@npm:^2.1.1, json5@npm:^2.2.2":
+"json5@npm:^2.1.1, json5@npm:^2.2.2, json5@npm:^2.2.3":
   version: 2.2.3
   resolution: "json5@npm:2.2.3"
   bin:
@@ -14053,7 +14145,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slugify@npm:^1.3.4":
+"slugify@npm:^1.3.4, slugify@npm:^1.6.6":
   version: 1.6.6
   resolution: "slugify@npm:1.6.6"
   checksum: 04773c2d3b7aea8d2a61fa47cc7e5d29ce04e1a96cbaec409da57139df906acb3a449fac30b167d203212c806e73690abd4ff94fbad0a9a7b7ea109a2a638ae9
@@ -14180,6 +14272,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"source-map@npm:0.5.6":
+  version: 0.5.6
+  resolution: "source-map@npm:0.5.6"
+  checksum: 390b3f5165c9631a74fb6fb55ba61e62a7f9b7d4026ae0e2bfc2899c241d71c1bccb8731c496dc7f7cb79a5f523406eb03d8c5bebe8448ee3fc38168e2d209c8
+  languageName: node
+  linkType: hard
+
 "source-map@npm:^0.5.6":
   version: 0.5.7
   resolution: "source-map@npm:0.5.7"
@@ -14282,6 +14381,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"stack-generator@npm:^2.0.5":
+  version: 2.0.10
+  resolution: "stack-generator@npm:2.0.10"
+  dependencies:
+    stackframe: ^1.3.4
+  checksum: 4fc3978a934424218a0aa9f398034e1f78153d5ff4f4ff9c62478c672debb47dd58de05b09fc3900530cbb526d72c93a6e6c9353bacc698e3b1c00ca3dda0c47
+  languageName: node
+  linkType: hard
+
 "stack-utils@npm:^2.0.3":
   version: 2.0.6
   resolution: "stack-utils@npm:2.0.6"
@@ -14295,6 +14403,27 @@ __metadata:
   version: 1.3.4
   resolution: "stackframe@npm:1.3.4"
   checksum: bae1596873595c4610993fa84f86a3387d67586401c1816ea048c0196800c0646c4d2da98c2ee80557fd9eff05877efe33b91ba6cd052658ed96ddc85d19067d
+  languageName: node
+  linkType: hard
+
+"stacktrace-gps@npm:^3.0.4":
+  version: 3.1.2
+  resolution: "stacktrace-gps@npm:3.1.2"
+  dependencies:
+    source-map: 0.5.6
+    stackframe: ^1.3.4
+  checksum: 85daa232d138239b6ae0f4bcdd87d15d302a045d93625db17614030945b5314e204b5fbcf9bee5b6f4f9e6af5fca05f65c27fe910894b861ef6853b99470aa1c
+  languageName: node
+  linkType: hard
+
+"stacktrace-js@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "stacktrace-js@npm:2.0.2"
+  dependencies:
+    error-stack-parser: ^2.0.6
+    stack-generator: ^2.0.5
+    stacktrace-gps: ^3.0.4
+  checksum: 081e786d56188ac04ac6604c09cd863b3ca2b4300ec061366cf68c3e4ad9edaa34fb40deea03cc23a05f442aa341e9171f47313f19bd588f9bec6c505a396286
   languageName: node
   linkType: hard
 
@@ -14535,6 +14664,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sucrase@npm:3.34.0":
+  version: 3.34.0
+  resolution: "sucrase@npm:3.34.0"
+  dependencies:
+    "@jridgewell/gen-mapping": ^0.3.2
+    commander: ^4.0.0
+    glob: 7.1.6
+    lines-and-columns: ^1.1.6
+    mz: ^2.7.0
+    pirates: ^4.0.1
+    ts-interface-checker: ^0.1.9
+  bin:
+    sucrase: bin/sucrase
+    sucrase-node: bin/sucrase-node
+  checksum: 61860063bdf6103413698e13247a3074d25843e91170825a9752e4af7668ffadd331b6e99e92fc32ee5b3c484ee134936f926fa9039d5711fafff29d017a2110
+  languageName: node
+  linkType: hard
+
 "sucrase@npm:^3.20.0":
   version: 3.32.0
   resolution: "sucrase@npm:3.32.0"
@@ -14604,7 +14751,7 @@ __metadata:
     expo-system-ui: ~2.2.1
     expo-web-browser: ~12.5.0
     jest: ^29.2.1
-    jest-expo: ~48.0.0
+    jest-expo: ~50.0.4
     luxon: ^3.3.0
     native-base: ^3.4.28
     react: 18.2.0
