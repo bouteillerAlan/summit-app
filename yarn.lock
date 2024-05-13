@@ -2177,6 +2177,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/config-plugins@npm:~8.0.0-beta.0":
+  version: 8.0.4
+  resolution: "@expo/config-plugins@npm:8.0.4"
+  dependencies:
+    "@expo/config-types": ^51.0.0-unreleased
+    "@expo/json-file": ~8.3.0
+    "@expo/plist": ^0.1.0
+    "@expo/sdk-runtime-versions": ^1.0.0
+    chalk: ^4.1.2
+    debug: ^4.3.1
+    find-up: ~5.0.0
+    getenv: ^1.0.0
+    glob: 7.1.6
+    resolve-from: ^5.0.0
+    semver: ^7.5.4
+    slash: ^3.0.0
+    slugify: ^1.6.6
+    xcode: ^3.0.1
+    xml2js: 0.6.0
+  checksum: 974119aa57cdf8dd197bfbc04a2c798433d4915cd5fb8ca19be0ebfaa7f773221c3ba8b60fe0b093343c8920993d0f2a65d01fafd82ca2055f6b68236908e232
+  languageName: node
+  linkType: hard
+
 "@expo/config-types@npm:^48.0.0":
   version: 48.0.0
   resolution: "@expo/config-types@npm:48.0.0"
@@ -2188,6 +2211,13 @@ __metadata:
   version: 49.0.0
   resolution: "@expo/config-types@npm:49.0.0"
   checksum: 5ce8e678495e2e4568f6b502e7f2ef8afd6a8962b28d8e17316249be82321dc5ec5061f8fc467c90d85e330fd3565823cfdc10bab4a78e6b1765296101c8d71d
+  languageName: node
+  linkType: hard
+
+"@expo/config-types@npm:^51.0.0-unreleased":
+  version: 51.0.0
+  resolution: "@expo/config-types@npm:51.0.0"
+  checksum: 5d773783e686143edd10f66af022a2101d28a4bb81588ab0851b23822ab9ba5ef4337724deb0d2b12132c41cd6e7fac93b0ff14cfb9ca1de6df45bd3270e95c2
   languageName: node
   linkType: hard
 
@@ -2245,6 +2275,25 @@ __metadata:
     slugify: ^1.3.4
     sucrase: ^3.20.0
   checksum: 6a8f17e306c94335373c74030e799db15c469d61aa2ae4a393fceef254e5e003ea30416428acb7e9adb81d7b261539e391ab11bd802759c8a79c5ecc5c3c2f59
+  languageName: node
+  linkType: hard
+
+"@expo/config@npm:~9.0.0-beta.0":
+  version: 9.0.1
+  resolution: "@expo/config@npm:9.0.1"
+  dependencies:
+    "@babel/code-frame": ~7.10.4
+    "@expo/config-plugins": ~8.0.0-beta.0
+    "@expo/config-types": ^51.0.0-unreleased
+    "@expo/json-file": ^8.3.0
+    getenv: ^1.0.0
+    glob: 7.1.6
+    require-from-string: ^2.0.2
+    resolve-from: ^5.0.0
+    semver: ^7.6.0
+    slugify: ^1.3.4
+    sucrase: 3.34.0
+  checksum: 2afb247657cdab069e55326decc04892b7d9ff7bf198c0bbaa1eb5a6a9b664c5758bcd22f5f6206ef38682b8b66b8855233d08dc101f9c8da712782a903719db
   languageName: node
   linkType: hard
 
@@ -2354,6 +2403,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/json-file@npm:^8.3.0, @expo/json-file@npm:~8.3.0":
+  version: 8.3.3
+  resolution: "@expo/json-file@npm:8.3.3"
+  dependencies:
+    "@babel/code-frame": ~7.10.4
+    json5: ^2.2.2
+    write-file-atomic: ^2.3.0
+  checksum: 49fcb3581ac21c1c223459f32e9e931149b56a7587318f666303a62e719e3d0f122ff56a60d47ee31fac937c297a66400a00fcee63a17bebbf4b8cd30c5138c1
+  languageName: node
+  linkType: hard
+
 "@expo/metro-config@npm:~0.10.0":
   version: 0.10.7
   resolution: "@expo/metro-config@npm:0.10.7"
@@ -2423,6 +2483,17 @@ __metadata:
     base64-js: ^1.2.3
     xmlbuilder: ^14.0.0
   checksum: 74dea791f86ca29541e94c00d7e0d044b1ccb7947a6f62b18569a85baa4572190c0cbd0973bf97eec9b5f207f45ebb55b8975bd200e5933b237e4d2d2dc12194
+  languageName: node
+  linkType: hard
+
+"@expo/plist@npm:^0.1.0":
+  version: 0.1.3
+  resolution: "@expo/plist@npm:0.1.3"
+  dependencies:
+    "@xmldom/xmldom": ~0.7.7
+    base64-js: ^1.2.3
+    xmlbuilder: ^14.0.0
+  checksum: 8abe78bed4d1849f2cddddd1a238c6fe5c2549a9dee40158224ff70112f31503db3f17a522b6e21f16eea66b5f4b46cc49d22f2b369067d00a88ef6d301a50cd
   languageName: node
   linkType: hard
 
@@ -9922,23 +9993,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-expo@npm:~48.0.0":
-  version: 48.0.2
-  resolution: "jest-expo@npm:48.0.2"
+"jest-expo@npm:~51.0.1":
+  version: 51.0.1
+  resolution: "jest-expo@npm:51.0.1"
   dependencies:
-    "@expo/config": ~8.0.0
+    "@expo/config": ~9.0.0-beta.0
+    "@expo/json-file": ^8.3.0
     "@jest/create-cache-key-function": ^29.2.1
     babel-jest: ^29.2.1
     find-up: ^5.0.0
     jest-environment-jsdom: ^29.2.1
     jest-watch-select-projects: ^2.0.0
     jest-watch-typeahead: 2.2.1
-    json5: ^2.1.0
+    json5: ^2.2.3
     lodash: ^4.17.19
     react-test-renderer: 18.2.0
+    stacktrace-js: ^2.0.2
   bin:
     jest: bin/jest.js
-  checksum: 72e4e324b6a95b24e672785b40147aafd2e183d49f81de877fd3d6ba594642c49b801108da69f97eeddc1354f2339e32b7cdc925c804b05fde695ea6a9e44d97
+  checksum: 8ecc6c723ddbdd76f6f53c8e0ff114bf20b277aa03abfcf5ab5fbf1f9d6ff17f4861f9c5eb34a62852349e86c9811899348b67ab9a6e1754cddfbbdf7e01e11e
   languageName: node
   linkType: hard
 
@@ -10552,7 +10625,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json5@npm:^2.1.0, json5@npm:^2.1.1, json5@npm:^2.2.2":
+"json5@npm:^2.1.1, json5@npm:^2.2.2, json5@npm:^2.2.3":
   version: 2.2.3
   resolution: "json5@npm:2.2.3"
   bin:
@@ -13839,6 +13912,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"semver@npm:^7.6.0":
+  version: 7.6.2
+  resolution: "semver@npm:7.6.2"
+  bin:
+    semver: bin/semver.js
+  checksum: 40f6a95101e8d854357a644da1b8dd9d93ce786d5c6a77227bc69dbb17bea83d0d1d1d7c4cd5920a6df909f48e8bd8a5909869535007f90278289f2451d0292d
+  languageName: node
+  linkType: hard
+
 "send@npm:0.18.0, send@npm:^0.18.0":
   version: 0.18.0
   resolution: "send@npm:0.18.0"
@@ -14053,7 +14135,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slugify@npm:^1.3.4":
+"slugify@npm:^1.3.4, slugify@npm:^1.6.6":
   version: 1.6.6
   resolution: "slugify@npm:1.6.6"
   checksum: 04773c2d3b7aea8d2a61fa47cc7e5d29ce04e1a96cbaec409da57139df906acb3a449fac30b167d203212c806e73690abd4ff94fbad0a9a7b7ea109a2a638ae9
@@ -14180,6 +14262,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"source-map@npm:0.5.6":
+  version: 0.5.6
+  resolution: "source-map@npm:0.5.6"
+  checksum: 390b3f5165c9631a74fb6fb55ba61e62a7f9b7d4026ae0e2bfc2899c241d71c1bccb8731c496dc7f7cb79a5f523406eb03d8c5bebe8448ee3fc38168e2d209c8
+  languageName: node
+  linkType: hard
+
 "source-map@npm:^0.5.6":
   version: 0.5.7
   resolution: "source-map@npm:0.5.7"
@@ -14282,6 +14371,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"stack-generator@npm:^2.0.5":
+  version: 2.0.10
+  resolution: "stack-generator@npm:2.0.10"
+  dependencies:
+    stackframe: ^1.3.4
+  checksum: 4fc3978a934424218a0aa9f398034e1f78153d5ff4f4ff9c62478c672debb47dd58de05b09fc3900530cbb526d72c93a6e6c9353bacc698e3b1c00ca3dda0c47
+  languageName: node
+  linkType: hard
+
 "stack-utils@npm:^2.0.3":
   version: 2.0.6
   resolution: "stack-utils@npm:2.0.6"
@@ -14295,6 +14393,27 @@ __metadata:
   version: 1.3.4
   resolution: "stackframe@npm:1.3.4"
   checksum: bae1596873595c4610993fa84f86a3387d67586401c1816ea048c0196800c0646c4d2da98c2ee80557fd9eff05877efe33b91ba6cd052658ed96ddc85d19067d
+  languageName: node
+  linkType: hard
+
+"stacktrace-gps@npm:^3.0.4":
+  version: 3.1.2
+  resolution: "stacktrace-gps@npm:3.1.2"
+  dependencies:
+    source-map: 0.5.6
+    stackframe: ^1.3.4
+  checksum: 85daa232d138239b6ae0f4bcdd87d15d302a045d93625db17614030945b5314e204b5fbcf9bee5b6f4f9e6af5fca05f65c27fe910894b861ef6853b99470aa1c
+  languageName: node
+  linkType: hard
+
+"stacktrace-js@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "stacktrace-js@npm:2.0.2"
+  dependencies:
+    error-stack-parser: ^2.0.6
+    stack-generator: ^2.0.5
+    stacktrace-gps: ^3.0.4
+  checksum: 081e786d56188ac04ac6604c09cd863b3ca2b4300ec061366cf68c3e4ad9edaa34fb40deea03cc23a05f442aa341e9171f47313f19bd588f9bec6c505a396286
   languageName: node
   linkType: hard
 
@@ -14535,6 +14654,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sucrase@npm:3.34.0":
+  version: 3.34.0
+  resolution: "sucrase@npm:3.34.0"
+  dependencies:
+    "@jridgewell/gen-mapping": ^0.3.2
+    commander: ^4.0.0
+    glob: 7.1.6
+    lines-and-columns: ^1.1.6
+    mz: ^2.7.0
+    pirates: ^4.0.1
+    ts-interface-checker: ^0.1.9
+  bin:
+    sucrase: bin/sucrase
+    sucrase-node: bin/sucrase-node
+  checksum: 61860063bdf6103413698e13247a3074d25843e91170825a9752e4af7668ffadd331b6e99e92fc32ee5b3c484ee134936f926fa9039d5711fafff29d017a2110
+  languageName: node
+  linkType: hard
+
 "sucrase@npm:^3.20.0":
   version: 3.32.0
   resolution: "sucrase@npm:3.32.0"
@@ -14604,7 +14741,7 @@ __metadata:
     expo-system-ui: ~2.2.1
     expo-web-browser: ~12.5.0
     jest: ^29.2.1
-    jest-expo: ~48.0.0
+    jest-expo: ~51.0.1
     luxon: ^3.3.0
     native-base: ^3.4.28
     react: 18.2.0
