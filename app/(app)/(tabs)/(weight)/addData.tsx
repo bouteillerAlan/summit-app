@@ -1,10 +1,24 @@
-import { router } from "expo-router";
-import { Text, View } from "react-native";
+import React from "react";
+import { Button, TextInput, View, Text } from "react-native";
+import { Formik } from "formik";
 
 export default function AppIndex() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>weight add</Text>
-    </View>
+    <Formik
+      initialValues={{ email: "" }}
+      onSubmit={(values) => console.log(values)}
+    >
+      {({ handleChange, handleBlur, handleSubmit, values }) => (
+        <View>
+          <Text>title</Text>
+          <TextInput
+            onChangeText={handleChange("email")}
+            onBlur={handleBlur("email")}
+            value={values.email}
+          />
+          <Button onPress={handleSubmit} title="Submit" />
+        </View>
+      )}
+    </Formik>
   );
 }

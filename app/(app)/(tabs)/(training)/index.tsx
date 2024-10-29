@@ -5,12 +5,11 @@ import { Link } from "expo-router";
 export default function AppIndex() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>weight dashboard</Text>
-      <Link replace href="/addData">
-        addData
-      </Link>
-      <Link replace href="/editData">
-        editData
+      <Text>training dashboard</Text>
+      <Link href="/addData">
+        <Pressable>
+          <Text>Add data</Text>
+        </Pressable>
       </Link>
     </View>
   );
